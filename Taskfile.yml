@@ -1,0 +1,12 @@
+version: '3'
+
+tasks:
+
+  install:
+    cmds:
+      - brew install mkcert
+      - mkcert -install
+
+  create:
+    cmds:
+      - mkcert -p12-file src/main/resources/localhost.p12 -pkcs12 localhost 127.0.0.1 ::1

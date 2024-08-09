@@ -29,28 +29,25 @@ repositories {
 extra["springModulithVersion"] = "1.2.1"
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+        exclude("org.springframework.boot", "spring-boot-starter-tomcat")
+    }
+    implementation("org.springframework.boot:spring-boot-starter-undertow")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-docker-compose")
+
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation("org.springframework.boot:spring-boot-docker-compose")
 
     // Kotlin Logging
     val kotlinLoggingVersion = "5.1.0"
     implementation("io.github.oshai:kotlin-logging-jvm:$kotlinLoggingVersion")
-
-    // JackRabbit WebDav
-    val jackRabbitVersion = "2.22.0"
-    implementation("org.apache.jackrabbit:jackrabbit-webdav:$jackRabbitVersion")
 
     // Spring Modulith
     implementation("org.springframework.modulith:spring-modulith-actuator")
     implementation("org.springframework.modulith:spring-modulith-starter-core")
     implementation("org.springframework.modulith:spring-modulith-observability")
     implementation("org.springframework.modulith:spring-modulith-starter-insight")
-
-    runtimeOnly("io.micrometer:micrometer-registry-prometheus")
-    runtimeOnly("org.postgresql:postgresql")
 
     implementation("io.micrometer:micrometer-tracing-bridge-brave")
     implementation("io.zipkin.reporter2:zipkin-reporter-brave")

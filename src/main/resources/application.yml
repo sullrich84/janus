@@ -14,6 +14,12 @@ server:
   error:
     whitelabel:
       enabled: false
+  port: 8443
+  ssl:
+    key-store: "classpath:localhost.p12"
+    key-store-type: PKCS12
+    key-store-password: changeit
+    enabled: true
 
 management:
   endpoint:
