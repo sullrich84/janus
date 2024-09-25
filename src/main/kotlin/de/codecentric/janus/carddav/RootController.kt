@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod
  * @since 1.0.0
  */
 @Controller
-class RootController {
+class RootController(val propService: PropService) {
 
     @RequestMapping("/codecentric", method = [RequestMethod.OPTIONS])
     fun handleCodecentricOptionsRequest() {
@@ -39,24 +39,12 @@ class RootController {
         @RequestBody propFindRequest: PropFindRequest,
     ): ResponseEntity<MultiStatusResponse> {
 
+        propService.resolve(propFindRequest)
+
         val response = MultiStatusResponse(
             response = Response(
                 href = "/",
-                propStatus = listOf(
-                    PropStatus(
-                        props = listOf(
-                            CurrentUserPrincipal("/codecentric/"),
-                            ResourceType(),
-                        ),
-                        status = "HTTP/1.1 200 OK"
-                    ),
-                    PropStatus(
-                        props = listOf(
-                            PrincipalUrl(),
-                        ),
-                        status = "HTTP/1.1 404 Not Found"
-                    )
-                )
+                propStatus =
             )
         )
 
