@@ -2,7 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24"
 
-    id("org.springframework.boot") version "3.3.2"
+    id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
     id("org.graalvm.buildtools.native") version "0.10.2"
 }
@@ -33,21 +33,25 @@ dependencies {
         exclude("org.springframework.boot", "spring-boot-starter-tomcat")
     }
     implementation("org.springframework.boot:spring-boot-starter-undertow")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-docker-compose")
 
+    implementation("com.fasterxml.jackson.core:jackson-databind")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
+    implementation("commons-io:commons-io:2.17.0")
 
     // Kotlin Logging
     val kotlinLoggingVersion = "5.1.0"
     implementation("io.github.oshai:kotlin-logging-jvm:$kotlinLoggingVersion")
 
     // Spring Modulith
-    implementation("org.springframework.modulith:spring-modulith-actuator")
-    implementation("org.springframework.modulith:spring-modulith-starter-core")
-    implementation("org.springframework.modulith:spring-modulith-observability")
-    implementation("org.springframework.modulith:spring-modulith-starter-insight")
+//    implementation("org.springframework.modulith:spring-modulith-actuator")
+//    implementation("org.springframework.modulith:spring-modulith-starter-core")
+//    implementation("org.springframework.modulith:spring-modulith-observability")
+//    implementation("org.springframework.modulith:spring-modulith-starter-insight")
 
     implementation("io.micrometer:micrometer-tracing-bridge-brave")
     implementation("io.zipkin.reporter2:zipkin-reporter-brave")

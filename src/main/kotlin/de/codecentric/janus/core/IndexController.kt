@@ -14,13 +14,13 @@ import java.time.OffsetDateTime
  * @since 1.0.0
  */
 @RestController
-@RequestMapping("/")
+//@RequestMapping("/")
 class IndexController {
 
     @Autowired
     lateinit var buildProperties: BuildProperties
 
-    @RequestMapping
+//    @RequestMapping
     fun index() = buildProperties.run {
         mapOf(
             "name" to name,
