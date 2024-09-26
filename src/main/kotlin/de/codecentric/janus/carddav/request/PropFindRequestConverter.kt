@@ -10,7 +10,12 @@ import org.w3c.dom.Element
 import org.xml.sax.InputSource
 import javax.xml.parsers.DocumentBuilderFactory
 
-
+/**
+ * Custom HTTP message converter for converting a PropFind request from XML to a [PropFindRequest] object.
+ *
+ * @author Sebastian Ullrich
+ * @since 1.0.0
+ */
 @Component
 class PropFindRequestConverter : HttpMessageConverter<PropFindRequest> {
 
@@ -46,16 +51,22 @@ class PropFindRequestConverter : HttpMessageConverter<PropFindRequest> {
             val node = propElements.item(i)
             if (node !is Element) continue
 
-            val additionalNsAliases = getNameSpaceAliases(node)
-            nsAliases = nsAliases.plus(additionalNsAliases)
+            // Extract lazy defined namespace aliases
+            nsAliases = nsAliases.plus(getNameSpaceAliases(node))
 
             val (nsAlias, name) = node.nodeName.split(":")
             requestedProps[name] = nsAlias
         }
 
-        return PropFindRequest(prop = requestedProps, nsAliases = nsAliases)
+        // Check that all namespace aliases are defined
+        check(nsAliases.keys.containsAll(requestedProps.values)) { "Orphaned namespace aliases detected" }
+
+        return PropFindRequest(props = requestedProps, nsAliases = nsAliases)
     }
 
+    /**
+     * Extracts lazy defined namespace aliases from the given element.
+     */
     private fun getNameSpaceAliases(element: Element): Map<String, String> {
         val nameSpaceAliases = mutableMapOf<String, String>()
         for (i in 0 until element.attributes.length) {

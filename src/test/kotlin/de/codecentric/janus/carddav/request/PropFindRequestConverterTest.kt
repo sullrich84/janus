@@ -16,7 +16,7 @@ class PropFindRequestConverterTest {
 
     @Nested
     @DisplayName("Given single namespace PropFind request")
-    inner class GivenSingleNameSpacePropFindRequest {
+    inner class GivenSingleNameSpaceNotFoundBuilderFindRequest {
 
         private val inputMessageMock = mockInputStream(
             """
@@ -35,7 +35,7 @@ class PropFindRequestConverterTest {
         @Test
         @DisplayName("should have expected props and name space aliases")
         fun shouldHaveExpectedPropsAndNameSpaceAliases() {
-            subject.prop shouldContainExactly mapOf(
+            subject.props shouldContainExactly mapOf(
                 "current-user-principal" to "A",
                 "principal-URL" to "A",
                 "resourcetype" to "A",
@@ -53,7 +53,7 @@ class PropFindRequestConverterTest {
 
     @Nested
     @DisplayName("Given multi namespace PropFind request")
-    inner class GivenMultiNameSpacePropFindRequest {
+    inner class GivenMultiNameSpaceNotFoundBuilderFindRequest {
 
         private val inputMessageMock = mockInputStream(
             """
@@ -77,7 +77,7 @@ class PropFindRequestConverterTest {
         @Test
         @DisplayName("should have expected props and name space aliases")
         fun shouldHaveExpectedPropsAndNameSpaceAliases() {
-            subject.prop shouldContainExactly mapOf(
+            subject.props shouldContainExactly mapOf(
                 "addressbook-home-set" to "B",
                 "directory-gateway" to "B",
                 "displayname" to "A",

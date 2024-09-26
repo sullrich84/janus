@@ -14,7 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class RootControllerTest {
+class CardDavPrincipalControllerTest {
 
     @Autowired
     lateinit var webClient: WebTestClient
@@ -36,9 +36,14 @@ class RootControllerTest {
                 """
                 <A:propfind xmlns:A="DAV:"> 
                     <A:prop> 
-                        <A:current-user-principal /> 
+                        <B:addressbook-home-set xmlns:B="urn:ietf:params:xml:ns:carddav" /> 
+                        <B:directory-gateway xmlns:B="urn:ietf:params:xml:ns:carddav" /> 
+                        <A:displayname /> 
+                        <C:email-address-set xmlns:C="http://calendarserver.org/ns/" /> 
+                        <A:principal-collection-set /> 
                         <A:principal-URL /> 
-                        <A:resourcetype /> 
+                        <A:resource-id /> 
+                        <A:supported-report-set /> 
                     </A:prop> 
                 </A:propfind>
                 """.trimIndent()
@@ -69,23 +74,46 @@ class RootControllerTest {
         fun shouldHaveResponseBody() {
             response.expectBody().xml(
                 """
-                <multistatus xmlns="DAV:">
+                <multistatus xmlns="DAV:" xmlns:CR="urn:ietf:params:xml:ns:carddav" xmlns:CS="http://calendarserver.org/ns/">
                     <response>
-                        <href>/</href>
+                        <href>/codecentric/</href>
                         <propstat>
                             <prop>
-                                <current-user-principal>
+                                <CR:addressbook-home-set>
                                     <href>/codecentric/</href>
-                                </current-user-principal>
-                                <resourcetype>
-                                    <collection />
-                                </resourcetype>
+                                </CR:addressbook-home-set>
+                                <principal-collection-set>
+                                    <href>/</href>
+                                </principal-collection-set>
+                                <principal-URL>
+                                    <href>/codecentric/</href>
+                                </principal-URL>
+                                <supported-report-set>
+                                    <supported-report>
+                                        <report>
+                                            <expand-property />
+                                        </report>
+                                    </supported-report>
+                                    <supported-report>
+                                        <report>
+                                            <principal-search-property-set />
+                                        </report>
+                                    </supported-report>
+                                    <supported-report>
+                                        <report>
+                                            <principal-property-search />
+                                        </report>
+                                    </supported-report>
+                                </supported-report-set>
                             </prop>
                             <status>HTTP/1.1 200 OK</status>
                         </propstat>
                         <propstat>
                             <prop>
-                                <principal-URL />
+                                <CR:directory-gateway />
+                                <displayname />
+                                <CS:email-address-set />
+                                <resource-id />
                             </prop>
                             <status>HTTP/1.1 404 Not Found</status>
                         </propstat>

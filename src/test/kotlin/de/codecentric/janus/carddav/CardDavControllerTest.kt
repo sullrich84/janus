@@ -14,7 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class PrincipalControllerTest {
+class CardDavControllerTest {
 
     @Autowired
     lateinit var webClient: WebTestClient
@@ -36,14 +36,9 @@ class PrincipalControllerTest {
                 """
                 <A:propfind xmlns:A="DAV:"> 
                     <A:prop> 
-                        <B:addressbook-home-set xmlns:B="urn:ietf:params:xml:ns:carddav" /> 
-                        <B:directory-gateway xmlns:B="urn:ietf:params:xml:ns:carddav" /> 
-                        <A:displayname /> 
-                        <C:email-address-set xmlns:C="http://calendarserver.org/ns/" /> 
-                        <A:principal-collection-set /> 
+                        <A:current-user-principal /> 
                         <A:principal-URL /> 
-                        <A:resource-id /> 
-                        <A:supported-report-set /> 
+                        <A:resourcetype /> 
                     </A:prop> 
                 </A:propfind>
                 """.trimIndent()
