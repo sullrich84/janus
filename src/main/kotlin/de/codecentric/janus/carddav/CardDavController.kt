@@ -9,6 +9,7 @@ import org.springframework.http.MediaType.TEXT_XML
 import org.springframework.http.MediaType.TEXT_XML_VALUE
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod.OPTIONS
@@ -34,9 +35,7 @@ class CardDavController(val service: CardDavService) {
             .body(response)
     }
 
-
-
-    @RequestMapping("/{principal}/", method = [OPTIONS])
+    @RequestMapping("/*/", method = [OPTIONS])
     fun handlePrincipalOptionsRequest(): ResponseEntity<MultiStatusResponse> {
         return ResponseEntity
             .status(OK)
@@ -59,8 +58,16 @@ class CardDavController(val service: CardDavService) {
             .build()
     }
 
-    @RequestMapping("/{principal}/addressbook", method = [OPTIONS])
-    fun handleCodecentricOptionsRequest() {
-
+    @RequestMapping("/{principal}/", produces = [TEXT_XML_VALUE])
+    fun handlePrincipalPropFindRequest(
+        @PathVariable principal: String,
+        @RequestBody propFindRequest: PropFindRequest,
+    ): ResponseEntity<MultiStatusResponse> {
+        val response = service.resolve(href = "/$principal/", propFindRequest = propFindRequest)
+        return ResponseEntity
+            .status(MULTI_STATUS)
+            .contentType(TEXT_XML)
+            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
+            .body(response)
     }
 }

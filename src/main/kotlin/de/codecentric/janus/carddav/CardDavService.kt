@@ -21,11 +21,14 @@ class CardDavService(val resolvers: List<PropResolver<*>>) {
         val listOk = mutableListOf<Prop>()
         val listNotFound = mutableListOf<Prop>()
 
+         val usedNsAliases = mutableMapOf<String, String>()
+
         propFindRequest.props.forEach { (propName, nsAlias) ->
             val resolver = resolvers.firstOrNull { it.supports(propName) }
 
             // Resolve namespace alias to correct alias
             val namespace = propFindRequest.nsAliases.filterKeys { it == nsAlias }.values.first()
+            usedNsAliases[nsAlias] = namespace
 
             if (resolver == null) {
                 val prop = Prop(propName, namespace)
@@ -39,7 +42,7 @@ class CardDavService(val resolvers: List<PropResolver<*>>) {
 
         return MultiStatusResponse(
             href = href,
-            nsAliases = mapOf(),
+            nsAliases = usedNsAliases,
             ok = listOk,
             notFound = listNotFound
         )

@@ -38,13 +38,16 @@ class MultiStatusResponseBuilder(multiStatusResponse: MultiStatusResponse) {
         multistatus.appendChild(response)
 
         response.appendChild(document.createElement("href").apply {
-            appendChild(document.createTextNode("/"))
+            appendChild(document.createTextNode(multiStatusResponse.href))
         })
 
         createPropStat(response, multiStatusResponse.ok, "HTTP/1.1 200 OK")
         createPropStat(response, multiStatusResponse.notFound, "HTTP/1.1 404 Not Found")
     }
 
+    /**
+     * Create a propstat element with the given children and status.
+     */
     private fun createPropStat(parent: Element, children: List<Prop>, status: String) {
         parent.appendChild(document.createElement("propstat").apply {
             val notFoundContainer = document.createElement("prop")

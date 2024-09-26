@@ -11,7 +11,11 @@ import org.w3c.dom.Element
  * @author Sebastian Ullrich
  * @since 1.0.0
  */
-open class Prop(private val name: String, private val namespace: String = "DAV:") {
+open class Prop(private val name: String, private val namespace: String = NAMESPACE) {
+
+    companion object {
+        const val NAMESPACE = "DAV:"
+    }
 
     open fun resolve(parent: Element): Element {
         return parent.ownerDocument.createElementNS(namespace, name)
