@@ -2,6 +2,7 @@
 
 package de.codecentric.janus.carddav.request
 
+import de.codecentric.janus.Namespace.*
 import io.kotest.matchers.maps.shouldContainExactly
 import io.mockk.every
 import io.mockk.mockk
@@ -16,7 +17,7 @@ class PropFindRequestConverterTest {
 
     @Nested
     @DisplayName("Given single namespace PropFind request")
-    inner class GivenSingleNameSpaceNotFoundBuilderFindRequest {
+    inner class GivenSingleNamespaceNotFoundBuilderFindRequest {
 
         private val inputMessageMock = mockInputStream(
             """
@@ -36,24 +37,24 @@ class PropFindRequestConverterTest {
         @DisplayName("should have expected props and name space aliases")
         fun shouldHaveExpectedPropsAndNameSpaceAliases() {
             subject.props shouldContainExactly mapOf(
-                "current-user-principal" to "A",
-                "principal-URL" to "A",
-                "resourcetype" to "A",
+                "current-user-principal" to DAV,
+                "principal-URL" to DAV,
+                "resourcetype" to DAV,
             )
         }
 
         @Test
         @DisplayName("should have expected name space uris and aliases")
         fun shouldHaveExpectedNameSpaceUrisAndAliases() {
-            subject.nsAliases shouldContainExactly mapOf(
-                "A" to "DAV:"
+            subject.namespaces shouldContainExactly mapOf(
+                "A" to DAV
             )
         }
     }
 
     @Nested
     @DisplayName("Given multi namespace PropFind request")
-    inner class GivenMultiNameSpaceNotFoundBuilderFindRequest {
+    inner class GivenMultiNamespaceNotFoundBuilderFindRequest {
 
         private val inputMessageMock = mockInputStream(
             """
@@ -78,24 +79,24 @@ class PropFindRequestConverterTest {
         @DisplayName("should have expected props and name space aliases")
         fun shouldHaveExpectedPropsAndNameSpaceAliases() {
             subject.props shouldContainExactly mapOf(
-                "addressbook-home-set" to "B",
-                "directory-gateway" to "B",
-                "displayname" to "A",
-                "email-address-set" to "C",
-                "principal-collection-set" to "A",
-                "principal-URL" to "A",
-                "resource-id" to "A",
-                "supported-report-set" to "A",
+                "addressbook-home-set" to CARDDAV,
+                "directory-gateway" to CARDDAV,
+                "displayname" to DAV,
+                "email-address-set" to CALENDAR_SERVER,
+                "principal-collection-set" to DAV,
+                "principal-URL" to DAV,
+                "resource-id" to DAV,
+                "supported-report-set" to DAV,
             )
         }
 
         @Test
         @DisplayName("should have expected name space uris and aliases")
         fun shouldHaveExpectedNameSpaceUrisAndAliases() {
-            subject.nsAliases shouldContainExactly mapOf(
-                "A" to "DAV:",
-                "B" to "urn:ietf:params:xml:ns:carddav",
-                "C" to "http://calendarserver.org/ns/",
+            subject.namespaces shouldContainExactly mapOf(
+                "A" to DAV,
+                "B" to CARDDAV,
+                "C" to CALENDAR_SERVER,
             )
         }
     }

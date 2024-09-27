@@ -43,6 +43,9 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("commons-io:commons-io:2.17.0")
 
+    val kotlinXmlBuilder = "1.9.1"
+    implementation("org.redundent:kotlin-xml-builder:$kotlinXmlBuilder")
+
     // Kotlin Logging
     val kotlinLoggingVersion = "5.1.0"
     implementation("io.github.oshai:kotlin-logging-jvm:$kotlinLoggingVersion")

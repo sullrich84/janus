@@ -31,7 +31,7 @@ class CardDavPrincipalControllerTest {
 
         private val response = webClient
             .method(HttpMethod.valueOf("PROPFIND"))
-            .uri("/")
+            .uri("/codecentric/")
             .bodyValue(
                 """
                 <A:propfind xmlns:A="DAV:"> 

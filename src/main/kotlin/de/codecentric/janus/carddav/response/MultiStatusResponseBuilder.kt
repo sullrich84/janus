@@ -1,14 +1,12 @@
 package de.codecentric.janus.carddav.response
 
-import de.codecentric.janus.carddav.resolver.Prop
-import org.w3c.dom.Document
-import org.w3c.dom.Element
+import de.codecentric.janus.Namespace.DAV
+import de.codecentric.janus.Status
+import de.codecentric.janus.Status.NOT_FOUND
+import de.codecentric.janus.Status.OK
+import org.redundent.kotlin.xml.Node
+import org.redundent.kotlin.xml.xml
 import java.io.ByteArrayOutputStream
-import javax.xml.parsers.DocumentBuilder
-import javax.xml.parsers.DocumentBuilderFactory
-import javax.xml.transform.TransformerFactory
-import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult
 
 /**
  * Builder for creating a multi status response defined by the CardDAV protocol.
@@ -16,63 +14,62 @@ import javax.xml.transform.stream.StreamResult
  * @author Sebastian Ullrich
  * @since 1.0.0
  */
-class MultiStatusResponseBuilder(multiStatusResponse: MultiStatusResponse) {
+class MultiStatusResponseBuilder(response: MultiStatusResponse) {
 
-    private var builder: DocumentBuilder = DocumentBuilderFactory.newNSInstance().newDocumentBuilder()
-    private var document: Document = builder.newDocument()
+    @Suppress("JoinDeclarationAndAssignment")
+    private var document: Node
 
     /**
      * Initialize the builder by creating the expected multistatus response structure.
      */
     init {
-        val multistatus = document.createElementNS("DAV:", "multistatus")
+        document = xml("multistatus") {
+            xmlns = DAV.uri
 
-        // Append all used aliases
-        multiStatusResponse.nsAliases.forEach { (alias, namespace) ->
-            multistatus.setAttribute("xmlns:$alias", namespace)
+            response.ok.values.plus(response.notFound.values)
+                .filterNot { it.isDefault }
+                .forEach { namespace(it.abbreviation, it.uri) }
+
+            "response" {
+                "href" {
+                    text(response.href)
+                }
+
+                if (response.ok.isNotEmpty()) {
+                    "propstat" {
+                        "prop" {
+                            response.ok.forEach { (prop) ->
+                                addElement(prop)
+                            }
+                        }
+                        "status" {
+                            text(OK.status)
+                        }
+                    }
+                }
+
+                if (response.notFound.isNotEmpty()) {
+                    "propstat" {
+                        "prop" {
+                            response.notFound.forEach { (prop) ->
+                                addElement(prop)
+                            }
+                        }
+                        "status" {
+                            text(NOT_FOUND.status)
+                        }
+                    }
+                }
+            }
         }
-
-        document.appendChild(multistatus)
-
-        val response = document.createElement("response")
-        multistatus.appendChild(response)
-
-        response.appendChild(document.createElement("href").apply {
-            appendChild(document.createTextNode(multiStatusResponse.href))
-        })
-
-        createPropStat(response, multiStatusResponse.ok, "HTTP/1.1 200 OK")
-        createPropStat(response, multiStatusResponse.notFound, "HTTP/1.1 404 Not Found")
-    }
-
-    /**
-     * Create a propstat element with the given children and status.
-     */
-    private fun createPropStat(parent: Element, children: List<Prop>, status: String) {
-        parent.appendChild(document.createElement("propstat").apply {
-            val notFoundContainer = document.createElement("prop")
-            appendChild(notFoundContainer)
-
-            // Append all children
-            children.forEach { notFoundContainer.appendChild(it.resolve(notFoundContainer)) }
-
-            appendChild(document.createElement("status").apply {
-                appendChild(document.createTextNode(status))
-            })
-        })
     }
 
     /**
      * Build the multistatus response output stream
      */
     fun build(): ByteArrayOutputStream {
-        val transformer = TransformerFactory.newInstance().newTransformer()
-        val source = DOMSource(document)
-
         val outputStream = ByteArrayOutputStream()
-        val result = StreamResult(outputStream)
-        transformer.transform(source, result)
-
+        document.toString(true).byteInputStream().copyTo(outputStream)
         return outputStream
     }
 }

@@ -1,5 +1,7 @@
 package de.codecentric.janus.carddav.request
 
+import de.codecentric.janus.Namespace
+import de.codecentric.janus.Namespace.DAV
 import org.springframework.http.HttpInputMessage
 import org.springframework.http.HttpOutputMessage
 import org.springframework.http.MediaType
@@ -42,8 +44,8 @@ class PropFindRequestConverter : HttpMessageConverter<PropFindRequest> {
 
         check(rootElement.nodeName.endsWith("propfind")) { "Invalid root element" }
 
-        var nsAliases = getNameSpaceAliases(rootElement)
-        val requestedProps = mutableMapOf<String, String>()
+        var namespaces = getNamespaces(rootElement)
+        val requestedProps = mutableMapOf<String, Namespace>()
 
         val propElements = rootElement.firstChild.nextSibling.childNodes
 
@@ -52,29 +54,29 @@ class PropFindRequestConverter : HttpMessageConverter<PropFindRequest> {
             if (node !is Element) continue
 
             // Extract lazy defined namespace aliases
-            nsAliases = nsAliases.plus(getNameSpaceAliases(node))
+            namespaces = namespaces.plus(getNamespaces(node))
 
-            val (nsAlias, name) = node.nodeName.split(":")
-            requestedProps[name] = nsAlias
+            val (namespaceAlias, name) = node.nodeName.split(":")
+            requestedProps[name] = namespaces[namespaceAlias] ?: DAV
         }
 
-        // Check that all namespace aliases are defined
-        check(nsAliases.keys.containsAll(requestedProps.values)) { "Orphaned namespace aliases detected" }
-
-        return PropFindRequest(props = requestedProps, nsAliases = nsAliases)
+        return PropFindRequest(props = requestedProps, namespaces = namespaces)
     }
 
     /**
      * Extracts lazy defined namespace aliases from the given element.
      */
-    private fun getNameSpaceAliases(element: Element): Map<String, String> {
-        val nameSpaceAliases = mutableMapOf<String, String>()
+    private fun getNamespaces(element: Element): Map<String, Namespace> {
+        val namespaces = mutableMapOf<String, Namespace>()
+
         for (i in 0 until element.attributes.length) {
             val attribute = element.attributes.item(i)
-            val (_, nsAlias) = attribute.nodeName.split(":")
-            nameSpaceAliases[nsAlias] = attribute.nodeValue
+            if (attribute.nodeName.startsWith("xmlns:")) {
+                val (_, namespaceAlias) = attribute.nodeName.split(":")
+                namespaces[namespaceAlias] = Namespace.lookup(attribute.nodeValue)
+            }
         }
 
-        return nameSpaceAliases
+        return namespaces
     }
 }

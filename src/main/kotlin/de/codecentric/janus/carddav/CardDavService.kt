@@ -1,9 +1,11 @@
 package de.codecentric.janus.carddav
 
+import de.codecentric.janus.Namespace
+import de.codecentric.janus.carddav.prop.PropResolver
 import de.codecentric.janus.carddav.request.PropFindRequest
-import de.codecentric.janus.carddav.resolver.Prop
-import de.codecentric.janus.carddav.resolver.PropResolver
 import de.codecentric.janus.carddav.response.MultiStatusResponse
+import org.redundent.kotlin.xml.Node
+import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
 
 /**
@@ -15,36 +17,24 @@ import org.springframework.stereotype.Component
  * @since 1.0.0
  */
 @Component
-class CardDavService(val resolvers: List<PropResolver<*>>) {
+class CardDavService(private val resolvers: List<PropResolver>) {
 
     fun resolve(href: String, propFindRequest: PropFindRequest): MultiStatusResponse {
-        val listOk = mutableListOf<Prop>()
-        val listNotFound = mutableListOf<Prop>()
 
-         val usedNsAliases = mutableMapOf<String, String>()
+        val okProps = mutableMapOf<Node, Namespace>()
+        val notFoundProps = mutableMapOf<Node, Namespace>()
 
-        propFindRequest.props.forEach { (propName, nsAlias) ->
-            val resolver = resolvers.firstOrNull { it.supports(propName) }
+        propFindRequest.props.forEach { (propName, namespace) ->
+            val resolver = resolvers.firstOrNull { it.supports(propName, namespace) }
 
-            // Resolve namespace alias to correct alias
-            val namespace = propFindRequest.nsAliases.filterKeys { it == nsAlias }.values.first()
-            usedNsAliases[nsAlias] = namespace
-
-            if (resolver == null) {
-                val prop = Prop(propName, namespace)
-                listNotFound.add(prop)
-                return@forEach
+            if (resolver != null) {
+                okProps[resolver.resolve()] = namespace
+            } else {
+                val prefixedPropName = namespace.appendPrefix(propName)
+                notFoundProps[xml(prefixedPropName)] = namespace
             }
-
-            val prop = resolver.resolve()
-            listOk.add(prop)
         }
 
-        return MultiStatusResponse(
-            href = href,
-            nsAliases = usedNsAliases,
-            ok = listOk,
-            notFound = listNotFound
-        )
+        return MultiStatusResponse(href, okProps, notFoundProps)
     }
 }
