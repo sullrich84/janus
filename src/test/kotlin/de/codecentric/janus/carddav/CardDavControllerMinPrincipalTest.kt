@@ -14,7 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CardDavPrincipalControllerTest {
+class CardDavControllerMinPrincipalTest {
 
     @Autowired
     lateinit var webClient: WebTestClient

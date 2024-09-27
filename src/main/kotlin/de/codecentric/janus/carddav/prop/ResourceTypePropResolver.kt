@@ -9,6 +9,8 @@ class ResourceTypePropResolver : PropResolver("resourcetype") {
 
     override fun resolve(): Node {
         return xml(namespace.appendPrefix(propName)) {
+            "CR:addressbook" {}
+            "principal" {}
             "collection" {}
         }
     }

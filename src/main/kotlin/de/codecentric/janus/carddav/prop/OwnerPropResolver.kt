@@ -5,7 +5,7 @@ import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
 
 @Component
-class PrincipalUrlPropResolver : PropResolver("owner") {
+class OwnerPropResolver : PropResolver("principal-URL") {
 
     override fun resolve(): Node {
         return xml(namespace.appendPrefix(propName)) {

@@ -27,7 +27,7 @@ class CardDavController(val service: CardDavService) {
 
     @RequestMapping("/", produces = [TEXT_XML_VALUE])
     fun handlePropFindRequest(@RequestBody propFindRequest: PropFindRequest): ResponseEntity<MultiStatusResponse> {
-        val response = service.resolve(href = "/", propFindRequest = propFindRequest)
+        val response = service.resolve(hrefs = listOf("/"), propFindRequest = propFindRequest)
         return ResponseEntity
             .status(MULTI_STATUS)
             .contentType(TEXT_XML)
@@ -36,7 +36,7 @@ class CardDavController(val service: CardDavService) {
     }
 
     @RequestMapping("/*/", method = [OPTIONS])
-    fun handlePrincipalOptionsRequest(): ResponseEntity<MultiStatusResponse> {
+    fun handlePrincipalOptionsRequest(): ResponseEntity<Void> {
         return ResponseEntity
             .status(OK)
             .allow(
@@ -63,7 +63,9 @@ class CardDavController(val service: CardDavService) {
         @PathVariable principal: String,
         @RequestBody propFindRequest: PropFindRequest,
     ): ResponseEntity<MultiStatusResponse> {
-        val response = service.resolve(href = "/$principal/", propFindRequest = propFindRequest)
+        val hrefs = listOf("/$principal/", "/$principal/addressbook/")
+        val response = service.resolve(hrefs = hrefs, propFindRequest = propFindRequest)
+
         return ResponseEntity
             .status(MULTI_STATUS)
             .contentType(TEXT_XML)

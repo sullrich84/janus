@@ -5,12 +5,14 @@ import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
 
 @Component
-class PrincipalUrlPropResolver : PropResolver("owner") {
+class CurrentUserPrivilegeSetPropResolver : PropResolver("current-user-privilege-set") {
 
     override fun resolve(): Node {
         return xml(namespace.appendPrefix(propName)) {
-            "href" {
-                text("/codecentric/")
+            listOf("read", "all", "write", "write-properties", "write-content").forEach {
+                "privilege" {
+                    it {}
+                }
             }
         }
     }

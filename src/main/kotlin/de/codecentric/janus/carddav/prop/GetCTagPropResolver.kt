@@ -1,11 +1,12 @@
 package de.codecentric.janus.carddav.prop
 
+import de.codecentric.janus.Namespace.CALENDAR_SERVER
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
 
 @Component
-class PrincipalUrlPropResolver : PropResolver("owner") {
+class GetCTagPropResolver : PropResolver("getctag", CALENDAR_SERVER) {
 
     override fun resolve(): Node {
         return xml(namespace.appendPrefix(propName)) {

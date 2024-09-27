@@ -29,7 +29,7 @@ class MultiStatusResponseConverter : HttpMessageConverter<MultiStatusResponse> {
     }
 
     override fun write(response: MultiStatusResponse, contentType: MediaType?, outputMessage: HttpOutputMessage) {
-        return MultiStatusResponseBuilder(response).build().writeTo(outputMessage.body)
+        return MultiStatusResponseWriter(response).write().writeTo(outputMessage.body)
     }
 
     override fun read(clazz: Class<out MultiStatusResponse>, inputMessage: HttpInputMessage): MultiStatusResponse {

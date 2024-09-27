@@ -4,6 +4,7 @@ import de.codecentric.janus.Namespace
 import de.codecentric.janus.carddav.prop.PropResolver
 import de.codecentric.janus.carddav.request.PropFindRequest
 import de.codecentric.janus.carddav.response.MultiStatusResponse
+import de.codecentric.janus.carddav.response.StatusResponse
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
@@ -19,8 +20,12 @@ import org.springframework.stereotype.Component
 @Component
 class CardDavService(private val resolvers: List<PropResolver>) {
 
-    fun resolve(href: String, propFindRequest: PropFindRequest): MultiStatusResponse {
+    fun resolve(hrefs: List<String>, propFindRequest: PropFindRequest): MultiStatusResponse {
+        val responses = hrefs.map { resolveStatusResponse(it, propFindRequest) }.toList()
+        return MultiStatusResponse(responses = responses)
+    }
 
+    fun resolveStatusResponse(href: String, propFindRequest: PropFindRequest): StatusResponse {
         val okProps = mutableMapOf<Node, Namespace>()
         val notFoundProps = mutableMapOf<Node, Namespace>()
 
@@ -35,6 +40,6 @@ class CardDavService(private val resolvers: List<PropResolver>) {
             }
         }
 
-        return MultiStatusResponse(href, okProps, notFoundProps)
+        return StatusResponse(href, okProps, notFoundProps)
     }
 }
