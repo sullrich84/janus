@@ -1,5 +1,6 @@
 package de.codecentric.janus.carddav.resolver
 
+import de.codecentric.janus.carddav.request.CardDavRequestContext
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
@@ -7,16 +8,16 @@ import org.springframework.stereotype.Component
 @Component
 class ResourceTypePropResolver : PropResolver("resourcetype") {
 
-    override fun resolve(context: ResolverContext): Node {
+    override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
             "collection" {}
 
-            when (context.href) {
-                "/${context.principal}/" -> {
+            when (resolverContext.href) {
+                "/${resolverContext.principal}/" -> {
                     "principal" {}
                 }
 
-                "/${context.principal}/addressbook/" -> {
+                "/${resolverContext.principal}/addressbook/" -> {
                     "CR:addressbook" {}
                 }
             }

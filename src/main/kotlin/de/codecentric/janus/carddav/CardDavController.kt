@@ -1,5 +1,6 @@
 package de.codecentric.janus.carddav
 
+import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.request.PropFindRequest
 import de.codecentric.janus.carddav.response.MultiStatusResponse
 import org.springframework.http.HttpMethod
@@ -29,8 +30,19 @@ import org.springframework.web.server.ResponseStatusException
 class CardDavController(val service: CardDavService) {
 
     @RequestMapping("/", produces = [TEXT_XML_VALUE])
-    fun handlePropFindRequest(@RequestBody propFindRequest: PropFindRequest): ResponseEntity<MultiStatusResponse> {
-        val response = service.resolve(hrefs = listOf("/"), propFindRequest = propFindRequest)
+    fun handlePropFindRequest(
+        @RequestBody propFindRequest: PropFindRequest,
+        @RequestHeader(defaultValue = "0") depth: Int,
+        @RequestHeader(defaultValue = "f") brief: String,
+    ): ResponseEntity<MultiStatusResponse> {
+        var cardDavRequestContext = CardDavRequestContext(0, brief == "t")
+
+        val response = service.resolve(
+            hrefs = listOf("/"),
+            propFindRequest = propFindRequest,
+            cardDavRequestContext = cardDavRequestContext,
+        )
+
         return ResponseEntity
             .status(MULTI_STATUS)
             .contentType(TEXT_XML)
@@ -70,7 +82,8 @@ class CardDavController(val service: CardDavService) {
     fun handlePrincipalPropFindRequest(
         @PathVariable principal: String,
         @RequestBody propFindRequest: PropFindRequest,
-        @RequestHeader depth: Int,
+        @RequestHeader(defaultValue = "0") depth: Int,
+        @RequestHeader(defaultValue = "f") brief: String,
     ): ResponseEntity<MultiStatusResponse> {
         val hrefs = when (depth) {
             0 -> listOf("/$principal/")
@@ -78,10 +91,13 @@ class CardDavController(val service: CardDavService) {
             else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Depth $depth not supported")
         }
 
+        var cardDavRequestContext = CardDavRequestContext(depth, brief == "t")
+
         val response = service.resolve(
             hrefs = hrefs,
             propFindRequest = propFindRequest,
-            principal = principal
+            principal = principal,
+            cardDavRequestContext = cardDavRequestContext,
         )
 
         return ResponseEntity
