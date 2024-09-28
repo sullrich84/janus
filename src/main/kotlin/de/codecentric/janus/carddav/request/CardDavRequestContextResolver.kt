@@ -8,10 +8,10 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
 
 @Component
-class CardDavContextResolver : HandlerMethodArgumentResolver {
+class CardDavRequestContextResolver : HandlerMethodArgumentResolver {
 
     override fun supportsParameter(parameter: MethodParameter): Boolean {
-        return parameter.getParameterType() == CardDavContext::class.java
+        return parameter.getParameterType() == CardDavRequestContext::class.java
     }
 
     override fun resolveArgument(
@@ -19,11 +19,11 @@ class CardDavContextResolver : HandlerMethodArgumentResolver {
         mavContainer: ModelAndViewContainer?,
         webRequest: NativeWebRequest,
         binderFactory: WebDataBinderFactory?,
-    ): CardDavContext {
+    ): CardDavRequestContext {
         val depth = webRequest.getHeader("Depth").let { it?.toIntOrNull() ?: 0 }
         val briefPreferred = webRequest.getHeader("Brief").let { it?.lowercase() == "t" }
         val userAgent = webRequest.getHeader("User-Agent") ?: "unknown"
 
-        return CardDavContext(depth = depth, briefPreferred = briefPreferred, userAgent = userAgent)
+        return CardDavRequestContext(depth = depth, briefPreferred = briefPreferred, userAgent = userAgent)
     }
 }

@@ -1,10 +1,9 @@
 package de.codecentric.janus.carddav
 
 import de.codecentric.janus.Namespace
-import de.codecentric.janus.carddav.prop.PropResolver
-import de.codecentric.janus.carddav.prop.ResolverContext
-import de.codecentric.janus.carddav.request.CardDavContext
-import de.codecentric.janus.carddav.request.CardDavContextResolver
+import de.codecentric.janus.carddav.resolver.PropResolver
+import de.codecentric.janus.carddav.resolver.ResolverContext
+import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.request.PropFindRequest
 import de.codecentric.janus.carddav.response.MultiStatusResponse
 import de.codecentric.janus.carddav.response.StatusResponse
@@ -26,17 +25,17 @@ class CardDavService(private val resolvers: MutableList<out PropResolver>) {
     fun resolve(
         hrefs: List<String>,
         propFindRequest: PropFindRequest,
-        cardDavContext: CardDavContext,
+        cardDavRequestContext: CardDavRequestContext,
         principal: String? = null,
     ): MultiStatusResponse {
-        val responses = hrefs.map { resolveStatusResponse(it, propFindRequest, cardDavContext, principal) }.toList()
+        val responses = hrefs.map { resolveStatusResponse(it, propFindRequest, cardDavRequestContext, principal) }.toList()
         return MultiStatusResponse(responses = responses)
     }
 
     fun resolveStatusResponse(
         href: String,
         propFindRequest: PropFindRequest,
-        cardDavContext: CardDavContext,
+        cardDavRequestContext: CardDavRequestContext,
         principal: String?,
     ): StatusResponse {
         val okProps = mutableMapOf<Node, Namespace>()
@@ -44,7 +43,7 @@ class CardDavService(private val resolvers: MutableList<out PropResolver>) {
 
         propFindRequest.props.forEach { (propName, namespace) ->
             val resolverContext = ResolverContext(propName, namespace, href, principal)
-            val resolver = resolvers.firstOrNull { it.supports(resolverContext, cardDavContext) }
+            val resolver = resolvers.firstOrNull { it.supports(resolverContext, cardDavRequestContext) }
 
             if (resolver != null) {
                 okProps[resolver.resolve(resolverContext)] = namespace

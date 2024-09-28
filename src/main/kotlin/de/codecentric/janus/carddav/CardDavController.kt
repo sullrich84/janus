@@ -1,6 +1,6 @@
 package de.codecentric.janus.carddav
 
-import de.codecentric.janus.carddav.request.CardDavContext
+import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.request.PropFindRequest
 import de.codecentric.janus.carddav.response.MultiStatusResponse
 import org.springframework.http.HttpMethod
@@ -13,7 +13,6 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod.OPTIONS
 import org.springframework.web.server.ResponseStatusException
@@ -32,12 +31,12 @@ class CardDavController(val service: CardDavService) {
     @RequestMapping("/", produces = [TEXT_XML_VALUE])
     fun handlePropFindRequest(
         @RequestBody propFindRequest: PropFindRequest,
-        cardDavContext: CardDavContext,
+        cardDavRequestContext: CardDavRequestContext,
     ): ResponseEntity<MultiStatusResponse> {
         val response = service.resolve(
             hrefs = listOf("/"),
             propFindRequest = propFindRequest,
-            cardDavContext = cardDavContext,
+            cardDavRequestContext = cardDavRequestContext,
         )
 
         return ResponseEntity
@@ -79,19 +78,18 @@ class CardDavController(val service: CardDavService) {
     fun handlePrincipalPropFindRequest(
         @PathVariable principal: String,
         @RequestBody propFindRequest: PropFindRequest,
-        @RequestHeader depth: Int,
-        cardDavContext: CardDavContext,
+        cardDavRequestContext: CardDavRequestContext,
     ): ResponseEntity<MultiStatusResponse> {
-        val hrefs = when (depth) {
+        val hrefs = when (cardDavRequestContext.depth) {
             0 -> listOf("/$principal/")
             1 -> listOf("/$principal/", "/$principal/addressbook/")
-            else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Depth $depth not supported")
+            else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Depth ${cardDavRequestContext.depth} not supported")
         }
 
         val response = service.resolve(
             hrefs = hrefs,
             propFindRequest = propFindRequest,
-            cardDavContext = cardDavContext,
+            cardDavRequestContext = cardDavRequestContext,
             principal = principal,
         )
 

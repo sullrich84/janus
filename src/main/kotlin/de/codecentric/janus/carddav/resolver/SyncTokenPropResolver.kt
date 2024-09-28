@@ -1,7 +1,6 @@
-package de.codecentric.janus.carddav.prop
+package de.codecentric.janus.carddav.resolver
 
-import de.codecentric.janus.Namespace
-import de.codecentric.janus.carddav.request.CardDavContext
+import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.vcard.VCardService
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
@@ -10,8 +9,8 @@ import org.springframework.stereotype.Component
 @Component
 class SyncTokenPropResolver(private val service: VCardService) : PropResolver("sync-token") {
 
-    override fun supports(resolverContext: ResolverContext, cardDavContext: CardDavContext): Boolean {
-        return super.supports(resolverContext, cardDavContext)
+    override fun supports(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Boolean {
+        return super.supports(resolverContext, cardDavRequestContext)
                 && resolverContext.href == "/${resolverContext.principal}/addressbook/"
     }
 

@@ -1,4 +1,4 @@
-package de.codecentric.janus.carddav.prop
+package de.codecentric.janus.carddav.resolver
 
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
