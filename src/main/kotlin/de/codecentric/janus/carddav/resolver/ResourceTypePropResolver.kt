@@ -13,11 +13,11 @@ class ResourceTypePropResolver : PropResolver("resourcetype") {
             "collection" {}
 
             when (resolverContext.href) {
-                "/${resolverContext.principal}/" -> {
+                "/${cardDavRequestContext.principal}/" -> {
                     "principal" {}
                 }
 
-                "/${resolverContext.principal}/addressbook/" -> {
+                "/${cardDavRequestContext.principal}/addressbook/" -> {
                     "CR:addressbook" {}
                 }
             }

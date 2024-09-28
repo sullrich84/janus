@@ -11,7 +11,7 @@ class SyncTokenPropResolver(private val service: VCardService) : PropResolver("s
 
     override fun supports(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Boolean {
         return super.supports(resolverContext, cardDavRequestContext)
-                && resolverContext.href == "/${resolverContext.principal}/addressbook/"
+                && resolverContext.href == "/${cardDavRequestContext.principal}/addressbook/"
     }
 
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {

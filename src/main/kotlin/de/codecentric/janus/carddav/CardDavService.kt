@@ -4,7 +4,6 @@ import de.codecentric.janus.Namespace
 import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.resolver.PropResolver
 import de.codecentric.janus.carddav.resolver.ResolverContext
-import de.codecentric.janus.carddav.request.PropFindRequest
 import de.codecentric.janus.carddav.response.MultiStatusResponse
 import de.codecentric.janus.carddav.response.StatusResponse
 import org.redundent.kotlin.xml.Node
@@ -22,26 +21,19 @@ import org.springframework.stereotype.Component
 @Component
 class CardDavService(private val resolvers: MutableList<out PropResolver>) {
 
-    fun resolve(
-        propFindRequest: PropFindRequest,
-        principal: String? = null,
-        cardDavRequestContext: CardDavRequestContext,
-    ): MultiStatusResponse {
-        val responses = cardDavRequestContext.locations.map { resolveStatusResponse(it, propFindRequest, principal, cardDavRequestContext) }.toList()
-        return MultiStatusResponse(responses = responses)
+    fun resolve(cardDavRequestContext: CardDavRequestContext): MultiStatusResponse {
+        val responses = cardDavRequestContext.locations
+            .map { resolveStatusResponse(it, cardDavRequestContext) }
+            .toList()
+        return MultiStatusResponse(responses)
     }
 
-    fun resolveStatusResponse(
-        location: String,
-        propFindRequest: PropFindRequest,
-        principal: String?,
-        cardDavRequestContext: CardDavRequestContext,
-    ): StatusResponse {
+    fun resolveStatusResponse(location: String, cardDavRequestContext: CardDavRequestContext): StatusResponse {
         val okProps = mutableMapOf<Node, Namespace>()
         val notFoundProps = mutableMapOf<Node, Namespace>()
 
-        propFindRequest.props.forEach { (propName, namespace) ->
-            val resolverContext = ResolverContext(propName, namespace, location, principal)
+        cardDavRequestContext.propFindRequest.props.forEach { (propName, namespace) ->
+            val resolverContext = ResolverContext(propName, namespace, location)
             val resolver = resolvers.firstOrNull { it.supports(resolverContext, cardDavRequestContext) }
 
             if (resolver != null) {

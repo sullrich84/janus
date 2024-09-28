@@ -10,14 +10,14 @@ class OwnerPropResolver : PropResolver("owner") {
 
     override fun supports(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Boolean {
         return super.supports(resolverContext, cardDavRequestContext)
-                && resolverContext.principal.isNullOrEmpty().not()
-                && resolverContext.href != "/${resolverContext.principal}/addressbook"
+                && cardDavRequestContext.principal.isNullOrEmpty().not()
+                && resolverContext.href != "/${cardDavRequestContext.principal}/addressbook"
     }
 
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
             "href" {
-                text("/${resolverContext.principal}/")
+                text("/${cardDavRequestContext.principal}/")
             }
         }
     }

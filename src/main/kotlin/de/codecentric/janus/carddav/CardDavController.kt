@@ -39,12 +39,10 @@ class CardDavController(val service: CardDavService) {
             depth = 0,
             brief = brief == "t",
             locations = listOf("/"),
+            propFindRequest = propFindRequest,
         )
 
-        val response = service.resolve(
-            propFindRequest = propFindRequest,
-            cardDavRequestContext = cardDavRequestContext,
-        )
+        val response = service.resolve(cardDavRequestContext = cardDavRequestContext)
 
         return ResponseEntity
             .status(MULTI_STATUS)
@@ -94,17 +92,15 @@ class CardDavController(val service: CardDavService) {
             else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Depth $depth not supported")
         }
 
-        var cardDavRequestContext = CardDavRequestContext(
+        val cardDavRequestContext = CardDavRequestContext(
             depth = depth,
             brief = brief == "t",
             locations = locations,
-        )
-
-        val response = service.resolve(
             propFindRequest = propFindRequest,
             principal = principal,
-            cardDavRequestContext = cardDavRequestContext,
         )
+
+        val response = service.resolve(cardDavRequestContext)
 
         return ResponseEntity
             .status(MULTI_STATUS)

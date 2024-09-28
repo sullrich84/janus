@@ -4,4 +4,6 @@ data class CardDavRequestContext(
     val depth: Int,
     val brief: Boolean,
     val locations: List<String>,
+    val propFindRequest: PropFindRequest,
+    val principal: String? = null,
 )

@@ -34,12 +34,10 @@ class CardDavServiceTest {
                 depth = 0,
                 brief = true,
                 locations = listOf(element = "/"),
+                propFindRequest = propFindRequest,
             )
 
-            val multiStatusResponse = subject.resolve(
-                propFindRequest = propFindRequest,
-                cardDavRequestContext = cardDavRequestContext,
-            ).responses.first()
+            val multiStatusResponse = subject.resolve(cardDavRequestContext = cardDavRequestContext).responses.first()
 
             multiStatusResponse.ok shouldHaveSize 1
             multiStatusResponse.ok.keys.first().toString() shouldBe """

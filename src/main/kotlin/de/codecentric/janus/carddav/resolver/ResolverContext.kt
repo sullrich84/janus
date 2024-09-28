@@ -6,5 +6,4 @@ data class ResolverContext(
     val propName: String,
     val namespace: Namespace,
     val href: String,
-    val principal: String?,
 )
