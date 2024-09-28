@@ -23,17 +23,16 @@ import org.springframework.stereotype.Component
 class CardDavService(private val resolvers: MutableList<out PropResolver>) {
 
     fun resolve(
-        hrefs: List<String>,
         propFindRequest: PropFindRequest,
         principal: String? = null,
         cardDavRequestContext: CardDavRequestContext,
     ): MultiStatusResponse {
-        val responses = hrefs.map { resolveStatusResponse(it, propFindRequest, principal, cardDavRequestContext) }.toList()
+        val responses = cardDavRequestContext.locations.map { resolveStatusResponse(it, propFindRequest, principal, cardDavRequestContext) }.toList()
         return MultiStatusResponse(responses = responses)
     }
 
     fun resolveStatusResponse(
-        href: String,
+        location: String,
         propFindRequest: PropFindRequest,
         principal: String?,
         cardDavRequestContext: CardDavRequestContext,
@@ -42,7 +41,7 @@ class CardDavService(private val resolvers: MutableList<out PropResolver>) {
         val notFoundProps = mutableMapOf<Node, Namespace>()
 
         propFindRequest.props.forEach { (propName, namespace) ->
-            val resolverContext = ResolverContext(propName, namespace, href, principal)
+            val resolverContext = ResolverContext(propName, namespace, location, principal)
             val resolver = resolvers.firstOrNull { it.supports(resolverContext, cardDavRequestContext) }
 
             if (resolver != null) {
@@ -53,6 +52,6 @@ class CardDavService(private val resolvers: MutableList<out PropResolver>) {
             }
         }
 
-        return StatusResponse(href, okProps, notFoundProps)
+        return StatusResponse(location, okProps, notFoundProps)
     }
 }

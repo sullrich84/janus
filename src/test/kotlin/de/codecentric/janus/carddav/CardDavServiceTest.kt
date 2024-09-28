@@ -30,10 +30,13 @@ class CardDavServiceTest {
             val props = mapOf("current-user-principal" to DAV, "some-unknown-prop" to DAV)
             val namespaces = mapOf("A" to DAV)
             val propFindRequest = PropFindRequest(props, namespaces)
-            val cardDavRequestContext = CardDavRequestContext(0, true)
+            val cardDavRequestContext = CardDavRequestContext(
+                depth = 0,
+                brief = true,
+                locations = listOf(element = "/"),
+            )
 
             val multiStatusResponse = subject.resolve(
-                hrefs = listOf("/"),
                 propFindRequest = propFindRequest,
                 cardDavRequestContext = cardDavRequestContext,
             ).responses.first()

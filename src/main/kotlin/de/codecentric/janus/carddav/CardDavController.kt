@@ -35,10 +35,13 @@ class CardDavController(val service: CardDavService) {
         @RequestHeader(defaultValue = "0") depth: Int,
         @RequestHeader(defaultValue = "f") brief: String,
     ): ResponseEntity<MultiStatusResponse> {
-        var cardDavRequestContext = CardDavRequestContext(0, brief == "t")
+        val cardDavRequestContext = CardDavRequestContext(
+            depth = 0,
+            brief = brief == "t",
+            locations = listOf("/"),
+        )
 
         val response = service.resolve(
-            hrefs = listOf("/"),
             propFindRequest = propFindRequest,
             cardDavRequestContext = cardDavRequestContext,
         )
@@ -85,16 +88,19 @@ class CardDavController(val service: CardDavService) {
         @RequestHeader(defaultValue = "0") depth: Int,
         @RequestHeader(defaultValue = "f") brief: String,
     ): ResponseEntity<MultiStatusResponse> {
-        val hrefs = when (depth) {
+        val locations = when (depth) {
             0 -> listOf("/$principal/")
             1 -> listOf("/$principal/", "/$principal/addressbook/")
             else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Depth $depth not supported")
         }
 
-        var cardDavRequestContext = CardDavRequestContext(depth, brief == "t")
+        var cardDavRequestContext = CardDavRequestContext(
+            depth = depth,
+            brief = brief == "t",
+            locations = locations,
+        )
 
         val response = service.resolve(
-            hrefs = hrefs,
             propFindRequest = propFindRequest,
             principal = principal,
             cardDavRequestContext = cardDavRequestContext,
