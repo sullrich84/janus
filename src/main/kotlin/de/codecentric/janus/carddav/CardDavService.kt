@@ -9,7 +9,6 @@ import de.codecentric.janus.carddav.response.StatusResponse
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
-import javax.naming.Name
 
 /**
  * Service class for resolving CardDAV properties.
@@ -28,8 +27,8 @@ class CardDavService(private val resolvers: MutableList<out PropResolver>) {
     }
 
     private fun resolveStatusResponse(location: String, cardDavRequestContext: CardDavRequestContext): StatusResponse {
-        val okProps = mutableMapOf<Node, Namespace>()
-        val notFoundProps = mutableMapOf<Node, Namespace>()
+        val okProps = mutableListOf<Node>()
+        val notFoundProps = mutableListOf<Node>()
         val namespaces = mutableSetOf<Namespace>()
 
         cardDavRequestContext.propFindRequest.props.forEach { (propName, namespace) ->
@@ -40,11 +39,11 @@ class CardDavService(private val resolvers: MutableList<out PropResolver>) {
 
             if (resolver != null) {
                 val node = resolver.resolve(resolverContext, cardDavRequestContext)
-                okProps[node] = namespace
+                okProps.add(node)
             } else {
                 val prefixedPropName = namespace.appendPrefix(propName)
                 val node = xml(prefixedPropName)
-                notFoundProps[node] = namespace
+                notFoundProps.add(node)
             }
         }
 

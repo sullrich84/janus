@@ -4,6 +4,7 @@ import de.codecentric.janus.Namespace.DAV
 import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.resolver.CurrentUserPrincipalPropResolver
 import de.codecentric.janus.carddav.request.PropFindRequest
+import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.maps.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DisplayName
@@ -39,8 +40,8 @@ class CardDavServiceTest {
 
             val multiStatusResponse = subject.resolve(cardDavRequestContext = cardDavRequestContext).responses.first()
 
-            multiStatusResponse.ok shouldHaveSize 1
-            multiStatusResponse.ok.keys.first().toString() shouldBe """
+            multiStatusResponse.ok shouldHaveSize  1
+            multiStatusResponse.ok.first().toString() shouldBe """
                 <current-user-principal>
                 	<href>
                 		/codecentric/
@@ -49,7 +50,7 @@ class CardDavServiceTest {
             """.trimIndent()
 
             multiStatusResponse.notFound shouldHaveSize 1
-            multiStatusResponse.notFound.keys.first().toString() shouldBe "<some-unknown-prop/>"
+            multiStatusResponse.notFound.first().toString() shouldBe "<some-unknown-prop/>"
         }
     }
 }

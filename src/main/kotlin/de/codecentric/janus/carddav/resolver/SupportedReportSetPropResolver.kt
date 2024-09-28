@@ -14,8 +14,6 @@ class SupportedReportSetPropResolver : PropResolver("supported-report-set") {
             val reports = mutableListOf("expand-property", "principal-search-property-set", "principal-property-search")
             if (resolverContext.href == "/${cardDavRequestContext.principal}/addressbook/") {
                 reports.add("sync-collection")
-
-                namespace(CARDDAV.abbreviation, CARDDAV.uri)
                 reports.add(CARDDAV.appendPrefix("addressbook-multiget"))
                 reports.add(CARDDAV.appendPrefix("addressbook-query"))
             }

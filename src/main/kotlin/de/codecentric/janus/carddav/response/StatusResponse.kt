@@ -15,6 +15,6 @@ import org.redundent.kotlin.xml.Node
  */
 data class StatusResponse(
     val href: String,
-    val ok: Map<Node, Namespace>,
-    val notFound: Map<Node, Namespace>,
+    val ok: List<Node>,
+    val notFound: List<Node>,
 )

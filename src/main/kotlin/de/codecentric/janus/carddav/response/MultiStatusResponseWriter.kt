@@ -1,5 +1,6 @@
 package de.codecentric.janus.carddav.response
 
+import de.codecentric.janus.Namespace
 import de.codecentric.janus.Namespace.DAV
 import de.codecentric.janus.Status.NOT_FOUND
 import de.codecentric.janus.Status.OK
@@ -26,7 +27,7 @@ class MultiStatusResponseWriter(source: MultiStatusResponse) {
             xmlns = DAV.uri
 
             // Append all namespaces referenced in the response
-            source.responses.flatMap { it.ok.values.plus(it.notFound.values) }
+            Namespace.entries
                 .filterNot { it.isDefault }
                 .forEach { namespace(it.abbreviation, it.uri) }
 
@@ -39,7 +40,7 @@ class MultiStatusResponseWriter(source: MultiStatusResponse) {
                     if (response.ok.isNotEmpty()) {
                         "propstat" {
                             "prop" {
-                                response.ok.forEach { (prop) ->
+                                response.ok.forEach { prop ->
                                     addElement(prop)
                                 }
                             }
@@ -52,7 +53,7 @@ class MultiStatusResponseWriter(source: MultiStatusResponse) {
                     if (response.notFound.isNotEmpty()) {
                         "propstat" {
                             "prop" {
-                                response.notFound.forEach { (prop) ->
+                                response.notFound.forEach { prop ->
                                     addElement(prop)
                                 }
                             }
