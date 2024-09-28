@@ -1,6 +1,5 @@
 package de.codecentric.janus.carddav.resolver
 
-import de.codecentric.janus.carddav.request.CardDavRequestContext
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
@@ -8,8 +7,8 @@ import org.springframework.stereotype.Component
 @Component
 class OwnerPropResolver : PropResolver("owner") {
 
-    override fun supports(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Boolean {
-        return super.supports(resolverContext, cardDavRequestContext)
+    override fun supports(resolverContext: ResolverContext): Boolean {
+        return super.supports(resolverContext)
                 && resolverContext.principal.isNullOrEmpty().not()
                 && resolverContext.href != "/${resolverContext.principal}/addressbook"
     }

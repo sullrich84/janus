@@ -2,7 +2,6 @@ package de.codecentric.janus.carddav
 
 import de.codecentric.janus.Namespace.DAV
 import de.codecentric.janus.carddav.resolver.CurrentUserPrincipalPropResolver
-import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.request.PropFindRequest
 import io.kotest.matchers.maps.shouldHaveSize
 import io.kotest.matchers.shouldBe
@@ -30,9 +29,8 @@ class CardDavServiceTest {
             val props = mapOf("current-user-principal" to DAV, "some-unknown-prop" to DAV)
             val namespaces = mapOf("A" to DAV)
             val propFindRequest = PropFindRequest(props, namespaces)
-            val cardDavRequestContext = CardDavRequestContext()
 
-            val multiStatusResponse = subject.resolve(listOf("/"), propFindRequest, cardDavRequestContext).responses.first()
+            val multiStatusResponse = subject.resolve(listOf("/"), propFindRequest).responses.first()
 
             multiStatusResponse.ok shouldHaveSize 1
             multiStatusResponse.ok.keys.first().toString() shouldBe """
