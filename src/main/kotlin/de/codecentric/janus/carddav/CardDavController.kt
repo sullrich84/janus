@@ -1,5 +1,6 @@
 package de.codecentric.janus.carddav
 
+import de.codecentric.janus.carddav.request.CardDavContext
 import de.codecentric.janus.carddav.request.PropFindRequest
 import de.codecentric.janus.carddav.response.MultiStatusResponse
 import org.springframework.http.HttpMethod
@@ -29,8 +30,16 @@ import org.springframework.web.server.ResponseStatusException
 class CardDavController(val service: CardDavService) {
 
     @RequestMapping("/", produces = [TEXT_XML_VALUE])
-    fun handlePropFindRequest(@RequestBody propFindRequest: PropFindRequest): ResponseEntity<MultiStatusResponse> {
-        val response = service.resolve(hrefs = listOf("/"), propFindRequest = propFindRequest)
+    fun handlePropFindRequest(
+        @RequestBody propFindRequest: PropFindRequest,
+        cardDavContext: CardDavContext,
+    ): ResponseEntity<MultiStatusResponse> {
+        val response = service.resolve(
+            hrefs = listOf("/"),
+            propFindRequest = propFindRequest,
+            cardDavContext = cardDavContext,
+        )
+
         return ResponseEntity
             .status(MULTI_STATUS)
             .contentType(TEXT_XML)
@@ -71,6 +80,7 @@ class CardDavController(val service: CardDavService) {
         @PathVariable principal: String,
         @RequestBody propFindRequest: PropFindRequest,
         @RequestHeader depth: Int,
+        cardDavContext: CardDavContext,
     ): ResponseEntity<MultiStatusResponse> {
         val hrefs = when (depth) {
             0 -> listOf("/$principal/")
@@ -81,7 +91,8 @@ class CardDavController(val service: CardDavService) {
         val response = service.resolve(
             hrefs = hrefs,
             propFindRequest = propFindRequest,
-            principal = principal
+            cardDavContext = cardDavContext,
+            principal = principal,
         )
 
         return ResponseEntity
