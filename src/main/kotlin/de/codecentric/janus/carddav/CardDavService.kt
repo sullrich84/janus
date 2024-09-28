@@ -22,10 +22,8 @@ import org.springframework.stereotype.Component
 class CardDavService(private val resolvers: MutableList<out PropResolver>) {
 
     fun resolve(cardDavRequestContext: CardDavRequestContext): MultiStatusResponse {
-        val responses = cardDavRequestContext.locations
-            .map { resolveStatusResponse(it, cardDavRequestContext) }
-            .toList()
-        return MultiStatusResponse(responses)
+        val responses = cardDavRequestContext.locations.map { resolveStatusResponse(it, cardDavRequestContext) }
+        return MultiStatusResponse(responses.toList())
     }
 
     fun resolveStatusResponse(location: String, cardDavRequestContext: CardDavRequestContext): StatusResponse {
