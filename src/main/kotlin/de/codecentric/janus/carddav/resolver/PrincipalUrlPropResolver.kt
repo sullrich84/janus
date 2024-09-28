@@ -11,6 +11,7 @@ class PrincipalUrlPropResolver : PropResolver("principal-URL") {
     override fun supports(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Boolean {
         return super.supports(resolverContext, cardDavRequestContext)
                 && resolverContext.href != "/"
+                && resolverContext.href != "/${cardDavRequestContext.principal}/addressbook/"
                 && cardDavRequestContext.principal != null
     }
 

@@ -10,17 +10,22 @@ import org.springframework.stereotype.Component
 class SupportedReportSetPropResolver : PropResolver("supported-report-set") {
 
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
-        val reports = mutableListOf("expand-property", "principal-search-property-set", "principal-property-search")
-
-        if (resolverContext.href == "/${cardDavRequestContext.principal}/addressbook/") {
-            reports.add("sync-collection")
-            reports.add(CARDDAV.appendPrefix("addressbook-multiget"))
-            reports.add(CARDDAV.appendPrefix("addressbook-query"))
-        }
-
         return xml(namespace.appendPrefix(propName)) {
+            val reports = mutableListOf("expand-property", "principal-search-property-set", "principal-property-search")
+            if (resolverContext.href == "/${cardDavRequestContext.principal}/addressbook/") {
+                reports.add("sync-collection")
+
+                namespace(CARDDAV.abbreviation, CARDDAV.uri)
+                reports.add(CARDDAV.appendPrefix("addressbook-multiget"))
+                reports.add(CARDDAV.appendPrefix("addressbook-query"))
+            }
+
             reports.forEach { report ->
-                "supported-report" { "report" { report {} } }
+                "supported-report" {
+                    "report" {
+                        report {}
+                    }
+                }
             }
         }
     }

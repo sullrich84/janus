@@ -1,5 +1,6 @@
 package de.codecentric.janus.carddav.resolver
 
+import de.codecentric.janus.Namespace.CARDDAV
 import de.codecentric.janus.carddav.request.CardDavRequestContext
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
@@ -18,7 +19,8 @@ class ResourceTypePropResolver : PropResolver("resourcetype") {
                 }
 
                 "/${cardDavRequestContext.principal}/addressbook/" -> {
-                    "CR:addressbook" {}
+                    namespace(CARDDAV.abbreviation, CARDDAV.uri)
+                    (CARDDAV.appendPrefix("addressbook")) {}
                 }
             }
         }

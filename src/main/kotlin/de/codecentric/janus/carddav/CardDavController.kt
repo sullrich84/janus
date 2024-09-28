@@ -111,4 +111,31 @@ class CardDavController(val service: CardDavService) {
             .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
             .body(response)
     }
+
+    @RequestMapping("/{principal}/addressbook", produces = [TEXT_XML_VALUE])
+    fun handlePrincipalAddressbookPropFindRequest(
+        @PathVariable principal: String,
+        @RequestBody propFindRequest: PropFindRequest,
+        @RequestHeader(defaultValue = "0") depth: Int,
+        @RequestHeader(defaultValue = "f") brief: String,
+    ): ResponseEntity<MultiStatusResponse> {
+        val cardDavRequestContext = CardDavRequestContext(
+            depth = depth,
+            brief = brief == "t",
+            locations = listOf("/$principal/addressbook/"),
+            propFindRequest = propFindRequest,
+            principal = principal,
+        )
+
+        val response = service.resolve(cardDavRequestContext)
+
+        return ResponseEntity
+            .status(MULTI_STATUS)
+            .contentType(TEXT_XML)
+            // TODO: Check if we only need
+            //  DAV: 1, 3, addressbook
+            //  Allow: GET, HEAD, OPTIONS, REPORT
+            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
+            .body(response)
+    }
 }
