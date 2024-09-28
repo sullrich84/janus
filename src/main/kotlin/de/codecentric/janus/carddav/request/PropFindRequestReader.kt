@@ -7,6 +7,14 @@ import org.xml.sax.InputSource
 import java.io.InputStream
 import javax.xml.parsers.DocumentBuilderFactory
 
+/**
+ * Reads a propfind request from the given input stream.
+ *
+ * @param source The input stream to read from
+ *
+ * @author Sebastian Ullrich
+ * @since 1.0.0
+ */
 class PropFindRequestReader(private val source: InputStream) {
 
     private val builder = DocumentBuilderFactory.newInstance().newDocumentBuilder()
