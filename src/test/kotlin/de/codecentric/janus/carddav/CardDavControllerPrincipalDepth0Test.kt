@@ -14,7 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CardDavControllerMinPrincipalTest {
+class CardDavControllerPrincipalDepth0Test {
 
     @Autowired
     lateinit var webClient: WebTestClient
@@ -32,6 +32,7 @@ class CardDavControllerMinPrincipalTest {
         private val response = webClient
             .method(HttpMethod.valueOf("PROPFIND"))
             .uri("/codecentric/")
+            .header("Depth", "0")
             .bodyValue(
                 """
                 <A:propfind xmlns:A="DAV:"> 

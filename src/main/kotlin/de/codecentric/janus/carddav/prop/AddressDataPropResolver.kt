@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class AddressDataPropResolver : PropResolver("address-data", CARDDAV) {
 
-    override fun resolve(): Node {
+    override fun resolve(context: ResolverContext): Node {
         return xml(namespace.appendPrefix(propName)) {
             "href" {
                 text("/codecentric/")

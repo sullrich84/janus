@@ -7,11 +7,19 @@ import org.springframework.stereotype.Component
 @Component
 class ResourceTypePropResolver : PropResolver("resourcetype") {
 
-    override fun resolve(): Node {
+    override fun resolve(context: ResolverContext): Node {
         return xml(namespace.appendPrefix(propName)) {
-            "CR:addressbook" {}
-            "principal" {}
             "collection" {}
+
+            when (context.href) {
+                "/${context.principal}/" -> {
+                    "principal" {}
+                }
+
+                "/${context.principal}/addressbook/" -> {
+                    "CR:addressbook" {}
+                }
+            }
         }
     }
 }

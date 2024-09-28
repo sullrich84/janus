@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 @Component
 class CurrentUserPrivilegeSetPropResolver : PropResolver("current-user-privilege-set") {
 
-    override fun resolve(): Node {
+    override fun resolve(context: ResolverContext): Node {
         return xml(namespace.appendPrefix(propName)) {
             listOf("read", "all", "write", "write-properties", "write-content").forEach {
                 "privilege" {

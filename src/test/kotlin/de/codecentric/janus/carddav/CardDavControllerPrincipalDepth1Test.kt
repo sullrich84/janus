@@ -14,7 +14,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 
 @AutoConfigureWebTestClient
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class CardDavControllerMaxPrincipalTest {
+class CardDavControllerPrincipalDepth1Test {
 
     @Autowired
     lateinit var webClient: WebTestClient
@@ -32,6 +32,7 @@ class CardDavControllerMaxPrincipalTest {
         private val response = webClient
             .method(HttpMethod.valueOf("PROPFIND"))
             .uri("/codecentric/")
+            .header("Depth", "1")
             .bodyValue(
                 """
                 <A:propfind xmlns:A="DAV:"> 
@@ -212,7 +213,7 @@ class CardDavControllerMaxPrincipalTest {
                                         </report>
                                     </supported-report>
                                 </supported-report-set>
-                                <sync-token>http://radicale.org/ns/sync/90a7f96c63d46e483b2d0a0b489d28e2460d1ccbd583f1f4aa7743a90ca9a6a5</sync-token>
+                                <sync-token>NOT-YET-IMPLEMENTED</sync-token>
                             </prop>
                             <status>HTTP/1.1 200 OK</status>
                         </propstat>

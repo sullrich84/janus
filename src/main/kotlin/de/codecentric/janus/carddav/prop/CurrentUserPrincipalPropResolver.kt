@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 @Component
 class CurrentUserPrincipalPropResolver : PropResolver("current-user-principal") {
 
-    override fun resolve(): Node {
+    override fun resolve(context: ResolverContext): Node {
         return xml(namespace.appendPrefix(propName)) {
             "href" {
                 text("/codecentric/")

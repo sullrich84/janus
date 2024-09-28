@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 @Component
 class PrincipalCollectionSetPropResolver : PropResolver("principal-collection-set") {
 
-    override fun resolve(): Node {
+    override fun resolve(context: ResolverContext): Node {
         return xml(namespace.appendPrefix(propName)) {
             "href" {
                 text("/")

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 @Component
 class SyncLevelPropResolver : PropResolver("sync-level") {
 
-    override fun resolve(): Node {
+    override fun resolve(context: ResolverContext): Node {
         return xml(namespace.appendPrefix(propName)) {
             text("1")
         }
