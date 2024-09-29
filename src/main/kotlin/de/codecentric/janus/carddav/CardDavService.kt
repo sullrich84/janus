@@ -31,17 +31,17 @@ class CardDavService(private val resolvers: MutableList<out PropResolver>) {
         val notFoundProps = mutableListOf<Node>()
         val namespaces = mutableSetOf<Namespace>()
 
-        cardDavRequestContext.propFindRequest.props.forEach { (propName, namespace) ->
-            val resolverContext = ResolverContext(propName, namespace, location)
+        cardDavRequestContext.webDavRequest.props.forEach { prop ->
+            val resolverContext = ResolverContext(prop.name, prop.namespace, location)
             val resolver = resolvers.firstOrNull { it.supports(resolverContext, cardDavRequestContext) }
 
-            namespaces.add(namespace)
+            namespaces.add(prop.namespace)
 
             if (resolver != null) {
                 val node = resolver.resolve(resolverContext, cardDavRequestContext)
                 okProps.add(node)
             } else {
-                val prefixedPropName = namespace.appendPrefix(propName)
+                val prefixedPropName = prop.namespace.appendPrefix(prop.name)
                 val node = xml(prefixedPropName)
                 notFoundProps.add(node)
             }

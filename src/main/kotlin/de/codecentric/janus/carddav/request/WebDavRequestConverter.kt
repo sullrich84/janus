@@ -8,16 +8,16 @@ import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.stereotype.Component
 
 /**
- * Custom HTTP message converter for converting a PropFind request from XML to a [PropFindRequest] object.
+ * Custom HTTP message converter for converting a PropFind request from XML to a [WebDavRequest] object.
  *
  * @author Sebastian Ullrich
  * @since 1.0.0
  */
 @Component
-class PropFindRequestConverter : HttpMessageConverter<PropFindRequest> {
+class WebDavRequestConverter : HttpMessageConverter<WebDavRequest> {
 
     override fun canRead(clazz: Class<*>, mediaType: MediaType?): Boolean {
-        return PropFindRequest::class.java.isAssignableFrom(clazz) && TEXT_XML.includes(mediaType)
+        return WebDavRequest::class.java.isAssignableFrom(clazz) && TEXT_XML.includes(mediaType)
     }
 
     override fun canWrite(clazz: Class<*>, mediaType: MediaType?): Boolean {
@@ -28,11 +28,11 @@ class PropFindRequestConverter : HttpMessageConverter<PropFindRequest> {
         return mutableListOf(TEXT_XML)
     }
 
-    override fun write(t: PropFindRequest, contentType: MediaType?, outputMessage: HttpOutputMessage) {
+    override fun write(t: WebDavRequest, contentType: MediaType?, outputMessage: HttpOutputMessage) {
         throw UnsupportedOperationException("PropFindRequestConverter does not support writing")
     }
 
-    override fun read(clazz: Class<out PropFindRequest>, inputMessage: HttpInputMessage): PropFindRequest {
-       return PropFindRequestReader(inputMessage.body).read()
+    override fun read(clazz: Class<out WebDavRequest>, inputMessage: HttpInputMessage): WebDavRequest {
+       return WebDavRequestReader(inputMessage.body).read()
     }
 }

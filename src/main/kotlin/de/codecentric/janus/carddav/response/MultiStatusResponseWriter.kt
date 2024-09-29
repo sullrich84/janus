@@ -27,6 +27,7 @@ class MultiStatusResponseWriter(source: MultiStatusResponse) {
             xmlns = DAV.uri
 
             // Append all namespaces referenced in the response
+            // TODO: Optimize usage of namespaces
             Namespace.entries
                 .filterNot { it.isDefault }
                 .forEach { namespace(it.abbreviation, it.uri) }

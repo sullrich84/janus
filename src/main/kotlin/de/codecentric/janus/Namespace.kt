@@ -15,7 +15,7 @@ enum class Namespace(val isDefault: Boolean, val abbreviation: String, val uri: 
     }
 
     companion object {
-        fun lookup(lookup: String): Namespace {
+        fun fromString(lookup: String): Namespace {
             return Namespace.entries.first { it.abbreviation == lookup || it.uri == lookup }
         }
     }

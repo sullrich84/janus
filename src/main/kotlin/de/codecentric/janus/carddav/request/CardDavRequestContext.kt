@@ -6,7 +6,7 @@ package de.codecentric.janus.carddav.request
  * @param depth The depth of the request
  * @param brief Whether the response should be brief
  * @param locations The locations of the request
- * @param propFindRequest The propfind request
+ * @param webDavRequest The propfind request
  * @param principal The principal of the request
  *
  * @author Sebastian Ullrich
@@ -16,6 +16,6 @@ data class CardDavRequestContext(
     val depth: Int,
     val brief: Boolean,
     val locations: List<String>,
-    val propFindRequest: PropFindRequest,
+    val webDavRequest: WebDavRequest,
     val principal: String? = null,
 )
