@@ -23,5 +23,8 @@ abstract class PropResolver(val propName: String, val namespace: Namespace = Nam
         return propName == resolverContext.propName && namespace == resolverContext.namespace
     }
 
+    /**
+     * Resolves the property for the given request context.
+     */
     abstract fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node
 }

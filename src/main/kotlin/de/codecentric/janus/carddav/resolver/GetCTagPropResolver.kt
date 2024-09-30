@@ -2,18 +2,29 @@ package de.codecentric.janus.carddav.resolver
 
 import de.codecentric.janus.Namespace.CALENDAR_SERVER
 import de.codecentric.janus.carddav.request.CardDavRequestContext
+import de.codecentric.janus.carddav.vcard.VCardService
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
 
+/**
+ * Resolver for the CTag (Collection Tag) property in CalDAV/CardDAV contexts.
+ *
+ * The CTag is a unique identifier that changes whenever any resource within a collection
+ * (e.g., a calendar or address book) is modified. It allows clients to quickly determine
+ * if any changes have occurred in the collection without examining each individual item.
+ *
+ * @property service The VCardService used to retrieve the CTag value.
+ *
+ * @author Sebastian Ullrich
+ * @since 1.0.0
+ */
 @Component
-class GetCTagPropResolver : PropResolver("getctag", CALENDAR_SERVER) {
+class GetCTagPropResolver(private val service: VCardService) : PropResolver("getctag", CALENDAR_SERVER) {
 
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
-            "href" {
-                text("/codecentric/")
-            }
+            text(service.getLatestCTag())
         }
     }
 }

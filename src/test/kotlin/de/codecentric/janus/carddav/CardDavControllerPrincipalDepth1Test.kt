@@ -1,5 +1,8 @@
 package de.codecentric.janus.carddav
 
+import com.ninjasquad.springmockk.MockkBean
+import de.codecentric.janus.carddav.vcard.VCardService
+import io.mockk.every
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -17,7 +20,10 @@ import org.springframework.test.web.reactive.server.WebTestClient
 class CardDavControllerPrincipalDepth1Test {
 
     @Autowired
-    lateinit var webClient: WebTestClient
+    private lateinit var webClient: WebTestClient
+
+    @MockkBean
+    private lateinit var vCardService: VCardService
 
     @Nested
     @DisplayName("Given PROPFIND request scenario")
@@ -29,12 +35,17 @@ class CardDavControllerPrincipalDepth1Test {
             set(HttpHeaders.ACCEPT, TEXT_XML_VALUE)
         }
 
-        private val response = webClient
-            .method(HttpMethod.valueOf("PROPFIND"))
-            .uri("/codecentric/")
-            .header("Depth", "1")
-            .bodyValue(
-                """
+        private var response: WebTestClient.ResponseSpec
+
+        init {
+            every { vCardService.getLatestSyncToken() } returns "SAMPLE_SYNC_TOKEN"
+
+            webClient
+                .method(HttpMethod.valueOf("PROPFIND"))
+                .uri("/codecentric/")
+                .header("Depth", "1")
+                .bodyValue(
+                    """
                 <A:propfind xmlns:A="DAV:"> 
                     <A:prop> 
                         <A:add-member /> 
@@ -57,9 +68,11 @@ class CardDavControllerPrincipalDepth1Test {
                     </A:prop> 
                 </A:propfind>
                 """.trimIndent()
-            )
-            .headers { it.addAll(defaultHeaders) }
-            .exchange()
+                )
+                .headers { it.addAll(defaultHeaders) }
+                .exchange()
+                .also { res -> response = res }
+        }
 
         @Test
         @DisplayName("should respond with status 207 Multi-Status")
@@ -213,7 +226,7 @@ class CardDavControllerPrincipalDepth1Test {
                                         </report>
                                     </supported-report>
                                 </supported-report-set>
-                                <sync-token>NOT-YET-IMPLEMENTED</sync-token>
+                                <sync-token>SAMPLE_SYNC_TOKEN</sync-token>
                             </prop>
                             <status>HTTP/1.1 200 OK</status>
                         </propstat>

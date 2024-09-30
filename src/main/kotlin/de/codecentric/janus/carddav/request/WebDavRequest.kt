@@ -23,6 +23,7 @@ data class WebDavRequest(
     val syncToken: String? = null,
     val syncLevel: Int? = null,
 ) {
+
     enum class RequestMethod(val value: String) {
         PROPFIND("propfind"),
         SYNC_COLLECTION("sync-collection"),

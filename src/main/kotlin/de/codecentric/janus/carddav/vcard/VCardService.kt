@@ -7,6 +7,11 @@ class VCardService {
 
     fun getLatestSyncToken(): String {
         // TODO: Implement this method
-        return "NOT-YET-IMPLEMENTED"
+        return "SYNC_TOKEN_NOT_IMPLEMENTED"
+    }
+
+    fun getLatestCTag(): String {
+        // TODO: Implement this method
+        return "CTAG_NOT_IMPLEMENTED"
     }
 }
