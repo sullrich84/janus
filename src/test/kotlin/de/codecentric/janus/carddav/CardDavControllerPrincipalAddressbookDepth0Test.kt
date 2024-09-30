@@ -1,7 +1,7 @@
 package de.codecentric.janus.carddav
 
 import com.ninjasquad.springmockk.MockkBean
-import de.codecentric.janus.carddav.vcard.VCardService
+import de.codecentric.janus.vcard.VCardService
 import io.mockk.every
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested

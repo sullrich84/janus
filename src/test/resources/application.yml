@@ -1,3 +1,6 @@
 server:
   ssl:
     enabled: false
+
+vcard:
+  pretty: true

@@ -2,7 +2,7 @@ package de.codecentric.janus.carddav.resolver.dav
 
 import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.resolver.ResolverContext
-import de.codecentric.janus.carddav.vcard.VCardService
+import de.codecentric.janus.vcard.VCardService
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component

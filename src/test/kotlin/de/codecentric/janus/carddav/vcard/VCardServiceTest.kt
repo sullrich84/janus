@@ -1,5 +1,6 @@
 package de.codecentric.janus.carddav.vcard
 
+import de.codecentric.janus.vcard.VCardService
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName

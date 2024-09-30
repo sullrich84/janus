@@ -1,0 +1,13 @@
+{
+  "uid": "blue",
+  "givenName": "Blue",
+  "familyName": "Blue",
+  "birthDate": "2024-08-30",
+  "email": "blue@codecentric.de",
+  "language": "DE",
+  "organization": "codecentric",
+  "role": "Unit Tester",
+  "phone": "+49 123 456789",
+  "revision": "2024-09-30T12:00",
+  "url": "https://codecentric.de"
+}

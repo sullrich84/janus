@@ -1,4 +1,4 @@
-package de.codecentric.janus.carddav.vcard
+package de.codecentric.janus.vcard
 
 import org.springframework.stereotype.Service
 

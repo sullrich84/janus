@@ -1,6 +1,7 @@
 plugins {
-    kotlin("jvm") version "1.9.24"
-    kotlin("plugin.spring") version "1.9.24"
+    kotlin("jvm") version "2.0.20"
+    kotlin("plugin.spring") version "2.0.20"
+    kotlin("plugin.serialization") version "2.0.20"
 
     id("org.springframework.boot") version "3.3.4"
     id("io.spring.dependency-management") version "1.1.6"
@@ -49,6 +50,12 @@ dependencies {
     // Kotlin Logging
     val kotlinLoggingVersion = "5.1.0"
     implementation("io.github.oshai:kotlin-logging-jvm:$kotlinLoggingVersion")
+
+    // Serialization
+    val kotlinxDatetimeVersion = "0.6.1"
+    val kotlinxSerializationVersion = "1.7.3"
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
 
     // Spring Modulith
 //    implementation("org.springframework.modulith:spring-modulith-actuator")
