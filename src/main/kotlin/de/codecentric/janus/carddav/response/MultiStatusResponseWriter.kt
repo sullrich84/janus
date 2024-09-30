@@ -65,6 +65,13 @@ class MultiStatusResponseWriter(source: MultiStatusResponse) {
                     }
                 }
             }
+
+            // Append sync token and sync level if available
+            if (source.syncToken != null) {
+                "sync-token" {
+                    text(source.syncToken)
+                }
+            }
         }
     }
 

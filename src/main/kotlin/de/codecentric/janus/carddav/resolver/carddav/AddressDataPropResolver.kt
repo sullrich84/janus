@@ -16,12 +16,12 @@ class AddressDataPropResolver(private val service: VCardService, private val wri
     override fun supports(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Boolean {
         return super.supports(resolverContext, cardDavRequestContext)
                 && resolverContext.href.endsWith(".vcf")
-                && service.hasVCard(getUidFromHref(resolverContext.href))
+                && service.has(getUidFromHref(resolverContext.href))
     }
 
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
-            val vcard = service.getVCard(getUidFromHref(resolverContext.href))
+            val vcard = service.get(getUidFromHref(resolverContext.href))
             writer.write(vcard).forEach { text(it) }
         }
     }

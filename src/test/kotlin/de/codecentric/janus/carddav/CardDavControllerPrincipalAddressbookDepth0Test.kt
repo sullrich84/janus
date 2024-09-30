@@ -1,14 +1,13 @@
 package de.codecentric.janus.carddav
 
-import com.ninjasquad.springmockk.MockkBean
-import de.codecentric.janus.vcard.VCardService
-import io.mockk.every
+import de.codecentric.janus.vcard.VCardConfiguration
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus.MULTI_STATUS
@@ -16,14 +15,12 @@ import org.springframework.http.MediaType.TEXT_XML_VALUE
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @AutoConfigureWebTestClient
+@Import(VCardConfiguration::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CardDavControllerPrincipalAddressbookDepth0Test {
 
     @Autowired
     private lateinit var webClient: WebTestClient
-
-    @MockkBean
-    private lateinit var vCardService: VCardService
 
     @Nested
     @DisplayName("Given PROPFIND request scenario")
@@ -35,18 +32,12 @@ class CardDavControllerPrincipalAddressbookDepth0Test {
             set(HttpHeaders.ACCEPT, TEXT_XML_VALUE)
         }
 
-        private var response: WebTestClient.ResponseSpec
-
-        init {
-            every { vCardService.getLatestCTag() } returns "SAMPLE_CTAG"
-            every { vCardService.getLatestSyncToken() } returns "SAMPLE_SYNC_TOKEN"
-
-            webClient
-                .method(HttpMethod.valueOf("PROPFIND"))
-                .uri("/codecentric/addressbook/")
-                .header("Depth", "0")
-                .bodyValue(
-                    """
+        private var response = webClient
+            .method(HttpMethod.valueOf("PROPFIND"))
+            .uri("/codecentric/addressbook/")
+            .header("Depth", "0")
+            .bodyValue(
+                """
                         <A:propfind xmlns:A="DAV:"> 
                             <A:prop> 
                                 <C:getctag xmlns:C="http://calendarserver.org/ns/" /> 
@@ -54,11 +45,9 @@ class CardDavControllerPrincipalAddressbookDepth0Test {
                             </A:prop> 
                         </A:propfind>
                         """.trimIndent()
-                )
-                .headers { it.addAll(defaultHeaders) }
-                .exchange()
-                .also { res -> response = res }
-        }
+            )
+            .headers { it.addAll(defaultHeaders) }
+            .exchange()
 
         @Test
         @DisplayName("should respond with status 207 Multi-Status")
@@ -88,8 +77,8 @@ class CardDavControllerPrincipalAddressbookDepth0Test {
                 		<href>/codecentric/addressbook/</href>
                 		<propstat>
                 			<prop>
-                				<CS:getctag>SAMPLE_CTAG</CS:getctag>
-                				<sync-token>SAMPLE_SYNC_TOKEN</sync-token>
+                				<CS:getctag>2024-09-30T12:00</CS:getctag>
+                				<sync-token>2024-09-30T12:00</sync-token>
                 			</prop>
                 			<status>HTTP/1.1 200 OK</status>
                 		</propstat>

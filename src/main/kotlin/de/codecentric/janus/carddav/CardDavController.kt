@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod.OPTIONS
 import org.springframework.web.server.ResponseStatusException
+import org.springframework.web.servlet.view.RedirectView
 
 
 /**
@@ -45,21 +46,16 @@ class CardDavController(val service: CardDavService) {
 
         val response = service.resolve(cardDavRequestContext = cardDavRequestContext)
 
-        return ResponseEntity
-            .status(MULTI_STATUS)
-            .contentType(TEXT_XML)
+        return ResponseEntity.status(MULTI_STATUS).contentType(TEXT_XML)
             // TODO: Check if we only need
             //  DAV: 1, 3, addressbook
             //  Allow: GET, HEAD, OPTIONS, REPORT
-            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
-            .body(response)
+            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol").body(response)
     }
 
     @RequestMapping("/**", method = [OPTIONS])
     fun handlePrincipalOptionsRequest(): ResponseEntity<Void> {
-        return ResponseEntity
-            .status(OK)
-            .allow(
+        return ResponseEntity.status(OK).allow(
                 // TODO: Check if we only need
                 //  DAV: 1, 3, addressbook
                 //  Allow: GET, HEAD, OPTIONS, REPORT
@@ -75,9 +71,7 @@ class CardDavController(val service: CardDavService) {
                 HttpMethod.valueOf("PROPFIND"),
                 HttpMethod.valueOf("PROPPATCH"),
                 HttpMethod.valueOf("REPORT"),
-            )
-            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
-            .build()
+            ).header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol").build()
     }
 
     @RequestMapping("/{principal}/", method = [], produces = [TEXT_XML_VALUE])
@@ -103,14 +97,11 @@ class CardDavController(val service: CardDavService) {
 
         val response = service.resolve(cardDavRequestContext)
 
-        return ResponseEntity
-            .status(MULTI_STATUS)
-            .contentType(TEXT_XML)
+        return ResponseEntity.status(MULTI_STATUS).contentType(TEXT_XML)
             // TODO: Check if we only need
             //  DAV: 1, 3, addressbook
             //  Allow: GET, HEAD, OPTIONS, REPORT
-            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
-            .body(response)
+            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol").body(response)
     }
 
     @RequestMapping("/{principal}/addressbook", produces = [TEXT_XML_VALUE])
@@ -130,14 +121,11 @@ class CardDavController(val service: CardDavService) {
 
         val response = service.resolve(cardDavRequestContext)
 
-        return ResponseEntity
-            .status(MULTI_STATUS)
-            .contentType(TEXT_XML)
+        return ResponseEntity.status(MULTI_STATUS).contentType(TEXT_XML)
             // TODO: Check if we only need
             //  DAV: 1, 3, addressbook
             //  Allow: GET, HEAD, OPTIONS, REPORT
-            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
-            .body(response)
+            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol").body(response)
     }
 
     @RequestMapping("/{principal}/addressbook/", produces = [TEXT_XML_VALUE])
@@ -147,10 +135,13 @@ class CardDavController(val service: CardDavService) {
         @RequestHeader(defaultValue = "0") depth: Int,
         @RequestHeader(defaultValue = "f") brief: String,
     ): ResponseEntity<MultiStatusResponse> {
-        val locations = when(webDavRequest.method) {
-            WebDavRequest.RequestMethod.PROPFIND -> listOf("/$principal/addressbook/")
-            WebDavRequest.RequestMethod.ADDRESSBOOK_MULTIGET -> webDavRequest.hrefs
-            else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Method ${webDavRequest.method} not supported")
+        val locations = when (webDavRequest.method) {
+            WebDavRequest.RequestMethod.SYNC_COLLECTION,
+            WebDavRequest.RequestMethod.PROPFIND,
+            -> listOf("/$principal/addressbook/")
+
+            WebDavRequest.RequestMethod.ADDRESSBOOK_MULTIGET,
+            -> webDavRequest.hrefs
         }
 
         val cardDavRequestContext = CardDavRequestContext(
@@ -163,13 +154,15 @@ class CardDavController(val service: CardDavService) {
 
         val response = service.resolve(cardDavRequestContext)
 
-        return ResponseEntity
-            .status(MULTI_STATUS)
-            .contentType(TEXT_XML)
+        return ResponseEntity.status(MULTI_STATUS).contentType(TEXT_XML)
             // TODO: Check if we only need
             //  DAV: 1, 3, addressbook
             //  Allow: GET, HEAD, OPTIONS, REPORT
-            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
-            .body(response)
+            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol").body(response)
+    }
+
+    @RequestMapping("/.well-known/carddav")
+    fun handleWellKnownCardDavRequest(): ResponseEntity<Void> {
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header("Location", "/").build()
     }
 }

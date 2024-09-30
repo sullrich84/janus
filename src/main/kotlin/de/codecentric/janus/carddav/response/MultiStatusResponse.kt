@@ -9,4 +9,7 @@ package de.codecentric.janus.carddav.response
  * @author Sebastian Ullrich
  * @since 1.0.0
  */
-data class MultiStatusResponse(val responses: List<StatusResponse>)
+data class MultiStatusResponse(
+    val responses: List<StatusResponse>,
+    val syncToken: String? = null,
+)

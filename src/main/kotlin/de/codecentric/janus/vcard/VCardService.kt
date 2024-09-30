@@ -1,29 +1,36 @@
 package de.codecentric.janus.vcard
 
+import kotlinx.datetime.LocalDateTime
 import org.springframework.stereotype.Service
 
 @Service
 class VCardService(private val repository: VCardRepository) {
 
     fun getLatestSyncToken(): String {
-        // TODO: Implement this method
-        return "SYNC_TOKEN_NOT_IMPLEMENTED"
+        return getAll().maxOfOrNull { it.revision }?.toString() ?: "0"
     }
 
     fun getLatestCTag(): String {
-        // TODO: Implement this method
-        return "CTAG_NOT_IMPLEMENTED"
+        return getAll().maxOfOrNull { it.revision }?.toString() ?: "0"
+    }
+
+    fun getAll(): Set<VCard> {
+        return repository.findAll()
     }
 
     fun getETag(uid: String): String {
         return repository.find(uid).revision.toString()
     }
 
-    fun getVCard(uid: String): VCard {
+    fun get(uid: String): VCard {
         return repository.find(uid)
     }
 
-    fun hasVCard(uid: String): Boolean {
+    fun has(uid: String): Boolean {
         return repository.exists(uid)
+    }
+
+    fun getUpdatedSince(lastSync: LocalDateTime): Set<VCard> {
+        return repository.findAll().filter { it.revision > lastSync }.toSet()
     }
 }

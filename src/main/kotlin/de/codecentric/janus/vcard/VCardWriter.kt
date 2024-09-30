@@ -18,24 +18,19 @@ import org.springframework.stereotype.Component
 @Component
 class VCardWriter {
 
-    @OptIn(FormatStringsInDatetimeFormats::class)
-    val BDAY_FORMATTER: DateTimeFormat<LocalDate> = LocalDate
-        .Format { byUnicodePattern("yyyy-MM-dd") }
-
-    @OptIn(FormatStringsInDatetimeFormats::class)
-    val REV_FORMATTER: DateTimeFormat<LocalDateTime> = LocalDateTime
-        .Format { byUnicodePattern("yyyy-MM-dd'T'HH:mm:ss") }
-
     fun write(vCard: VCard): Array<String> {
+        val bday = LocalDate.Formats.ISO.format(vCard.birthDate)
+        val rev = LocalDateTime.Formats.ISO.format(vCard.revision)
+
         return vCard.run {
             arrayOf(
                 "BEGIN:VCARD",
                 "VERSION:3.0",
                 "UID:$uid",
-                "REV:${REV_FORMATTER.format(revision)}",
+                "REV:$rev",
                 "N:$familyName;$givenName;;;",
                 "FN:$givenName $familyName",
-                "BDAY:${BDAY_FORMATTER.format(birthDate)}",
+                "BDAY:$bday",
                 "EMAIL:$email",
                 "LANG:$language",
                 "ORG:$organization",

@@ -1,9 +1,12 @@
 package de.codecentric.janus.carddav
 
+import com.ninjasquad.springmockk.MockkBean
 import de.codecentric.janus.Namespace.DAV
 import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.request.WebDavRequest
 import de.codecentric.janus.carddav.resolver.dav.CurrentUserPrincipalPropResolver
+import de.codecentric.janus.vcard.VCardConfiguration
+import de.codecentric.janus.vcard.VCardService
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DisplayName
@@ -11,9 +14,11 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
 import org.springframework.test.context.ContextConfiguration
 
 @SpringBootTest
+@MockkBean(VCardService::class)
 @ContextConfiguration(classes = [CardDavService::class, CurrentUserPrincipalPropResolver::class])
 class CardDavServiceTest {
 

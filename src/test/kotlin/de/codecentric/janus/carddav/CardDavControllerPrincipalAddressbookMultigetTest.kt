@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus.MULTI_STATUS
@@ -17,14 +18,12 @@ import org.springframework.http.MediaType.TEXT_XML_VALUE
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @AutoConfigureWebTestClient
+@Import(VCardConfiguration::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CardDavControllerPrincipalAddressbookMultigetTest {
 
     @Autowired
     lateinit var webClient: WebTestClient
-
-    @MockkBean(relaxed = true)
-    private lateinit var configuration: VCardConfiguration
 
     @MockkBean(relaxed = true)
     private lateinit var writer: VCardWriter
@@ -42,9 +41,6 @@ class CardDavControllerPrincipalAddressbookMultigetTest {
         private val response: WebTestClient.ResponseSpec
 
         init {
-            val path = this::class.java.classLoader.getResource("vcard")?.path
-            every { configuration.path } returns path.toString()
-
             // Due to comparison issues we mock the writer response
             every { writer.write(any()) } returns arrayOf("VCARD_DATA")
 

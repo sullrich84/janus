@@ -1,11 +1,13 @@
 package de.codecentric.janus.carddav
 
+import de.codecentric.janus.vcard.VCardConfiguration
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus.MULTI_STATUS
@@ -13,6 +15,7 @@ import org.springframework.http.MediaType.TEXT_XML_VALUE
 import org.springframework.test.web.reactive.server.WebTestClient
 
 @AutoConfigureWebTestClient
+@Import(VCardConfiguration::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CardDavControllerPrincipalAddressbookTest {
 
