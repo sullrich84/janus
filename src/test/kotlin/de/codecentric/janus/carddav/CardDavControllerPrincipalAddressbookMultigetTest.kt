@@ -54,15 +54,15 @@ class CardDavControllerPrincipalAddressbookMultigetTest {
                 .header("Depth", "1")
                 .bodyValue(
                     """
-                <B:addressbook-multiget xmlns:B="urn:ietf:params:xml:ns:carddav"> 
-                	<A:prop xmlns:A="DAV:"> 
-                		<A:getetag /> 
-                		<B:address-data /> 
-                	</A:prop> 
-                	<A:href xmlns:A="DAV:">/codecentric/addressbook/red.vcf</A:href> 
-                	<A:href xmlns:A="DAV:">/codecentric/addressbook/blue.vcf</A:href> 
-                </B:addressbook-multiget>
-                """.trimIndent()
+                    <B:addressbook-multiget xmlns:B="urn:ietf:params:xml:ns:carddav"> 
+                        <A:prop xmlns:A="DAV:"> 
+                            <A:getetag /> 
+                            <B:address-data /> 
+                        </A:prop> 
+                        <A:href xmlns:A="DAV:">/codecentric/addressbook/red.vcf</A:href> 
+                        <A:href xmlns:A="DAV:">/codecentric/addressbook/blue.vcf</A:href> 
+                    </B:addressbook-multiget>
+                    """.trimIndent()
                 )
                 .headers { it.addAll(defaultHeaders) }
                 .exchange()
