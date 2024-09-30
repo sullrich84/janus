@@ -2,7 +2,7 @@ package de.codecentric.janus.carddav
 
 import de.codecentric.janus.Namespace.DAV
 import de.codecentric.janus.carddav.request.CardDavRequestContext
-import de.codecentric.janus.carddav.resolver.CurrentUserPrincipalPropResolver
+import de.codecentric.janus.carddav.resolver.dav.CurrentUserPrincipalPropResolver
 import de.codecentric.janus.carddav.request.WebDavRequest
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.shouldBe

@@ -1,7 +1,7 @@
-package de.codecentric.janus.carddav.resolver
+package de.codecentric.janus.carddav.resolver.calendarserver
 
-import de.codecentric.janus.Namespace.CALENDAR_SERVER
 import de.codecentric.janus.carddav.request.CardDavRequestContext
+import de.codecentric.janus.carddav.resolver.ResolverContext
 import de.codecentric.janus.carddav.vcard.VCardService
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component
  * @since 1.0.0
  */
 @Component
-class GetCTagPropResolver(private val service: VCardService) : PropResolver("getctag", CALENDAR_SERVER) {
+class GetCTagPropResolver(private val service: VCardService) : CalendarServerPropResolver("getctag") {
 
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {

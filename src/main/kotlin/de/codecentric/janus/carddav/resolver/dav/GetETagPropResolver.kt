@@ -1,23 +1,22 @@
-package de.codecentric.janus.carddav.resolver
+package de.codecentric.janus.carddav.resolver.dav
 
-import de.codecentric.janus.Namespace.CARDDAV
 import de.codecentric.janus.carddav.request.CardDavRequestContext
+import de.codecentric.janus.carddav.resolver.ResolverContext
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
 
 /**
- * Resolver for the addressbook-home-set property in CardDAV contexts.
+ * Resolver for the ETag (Entity Tag) property in WebDAV contexts.
  *
- * The addressbook-home-set property identifies the URL of any WebDAV collections
- * that contain address book collections owned by the authenticated user.
- * This is a crucial property for CardDAV clients to discover available address books.
+ * The ETag is a unique identifier for a specific version of a resource. It allows
+ * clients to make conditional requests and helps in caching and concurrency control.
  *
  * @author Sebastian Ullrich
  * @since 1.0.0
  */
 @Component
-class AddressbookHomeSetPropResolver : PropResolver("addressbook-home-set", CARDDAV) {
+class GetETagPropResolver : DavPropResolver("getetag") {
 
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {

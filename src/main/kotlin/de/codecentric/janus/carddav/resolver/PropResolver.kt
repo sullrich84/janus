@@ -13,7 +13,7 @@ import org.redundent.kotlin.xml.Node
  * @author Sebastian Ullrich
  * @since 1.0.0
  */
-abstract class PropResolver(val propName: String, val namespace: Namespace = Namespace.DAV) {
+abstract class PropResolver(open val propName: String, open val namespace: Namespace = Namespace.DAV) {
 
     /**
      * Checks if this resolver supports the given request context
