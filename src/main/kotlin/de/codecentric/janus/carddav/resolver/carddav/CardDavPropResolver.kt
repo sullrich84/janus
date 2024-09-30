@@ -1,6 +1,6 @@
 package de.codecentric.janus.carddav.resolver.carddav
 
-import de.codecentric.janus.Namespace.*
+import de.codecentric.janus.Namespace.CARDDAV
 import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.resolver.PropResolver
 import de.codecentric.janus.carddav.resolver.ResolverContext

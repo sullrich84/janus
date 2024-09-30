@@ -1,6 +1,5 @@
 package de.codecentric.janus.carddav.response
 
-import de.codecentric.janus.Namespace
 import org.redundent.kotlin.xml.Node
 
 /**

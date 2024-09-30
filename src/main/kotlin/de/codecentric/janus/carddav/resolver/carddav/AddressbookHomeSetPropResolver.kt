@@ -1,8 +1,6 @@
 package de.codecentric.janus.carddav.resolver.carddav
 
-import de.codecentric.janus.Namespace.CARDDAV
 import de.codecentric.janus.carddav.request.CardDavRequestContext
-import de.codecentric.janus.carddav.resolver.PropResolver
 import de.codecentric.janus.carddav.resolver.ResolverContext
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml

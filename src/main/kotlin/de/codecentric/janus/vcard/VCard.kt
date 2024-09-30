@@ -3,7 +3,7 @@ package de.codecentric.janus.vcard
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneOffset
-import java.util.UUID
+import java.util.*
 
 /**
  * Data class representing a vCard.

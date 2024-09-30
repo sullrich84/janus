@@ -1,6 +1,6 @@
 package de.codecentric.janus.carddav.resolver.calendarserver
 
-import de.codecentric.janus.Namespace.*
+import de.codecentric.janus.Namespace.CALENDAR_SERVER
 import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.resolver.PropResolver
 import de.codecentric.janus.carddav.resolver.ResolverContext

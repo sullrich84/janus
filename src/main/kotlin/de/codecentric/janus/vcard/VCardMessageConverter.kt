@@ -6,7 +6,7 @@ import org.springframework.http.HttpOutputMessage
 import org.springframework.http.MediaType
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.stereotype.Component
-import java.nio.charset.StandardCharsets.*
+import java.nio.charset.StandardCharsets.UTF_8
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
