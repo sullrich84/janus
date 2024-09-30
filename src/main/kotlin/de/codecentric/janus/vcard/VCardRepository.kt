@@ -13,9 +13,7 @@ import java.io.FileNotFoundException
 @OptIn(ExperimentalSerializationApi::class)
 class VCardRepository(private val configuration: VCardConfiguration) : InMemoryAuditEventRepository() {
 
-    private val json = Json {
-        prettyPrint = true
-    }
+    private val json = Json { prettyPrint = true }
 
     fun find(uid: String): VCard {
         val file = File("${configuration.path}/$uid.json")
@@ -24,10 +22,32 @@ class VCardRepository(private val configuration: VCardConfiguration) : InMemoryA
         return json.decodeFromStream(file.inputStream())
     }
 
+    fun findAllUid(): Set<String> {
+        val directory = File(configuration.path)
+        if (directory.exists().not()) return emptySet()
+
+        val vCards = directory.listFiles() ?: emptyArray()
+        return vCards
+            .filter { it.extension == "json" }
+            .map { it.nameWithoutExtension }
+            .toSet()
+    }
+
+    fun findAll(): Set<VCard> {
+        return findAllUid()
+            .map { find(it) }
+            .toSet()
+    }
+
     fun save(vCard: VCard) {
         val file = File("${configuration.path}/${vCard.uid}.json")
         file.parentFile.mkdirs()
 
         json.encodeToStream(vCard, file.outputStream())
+    }
+
+    fun exists(uid: String): Boolean {
+        val file = File("${configuration.path}/$uid.json")
+        return file.exists()
     }
 }

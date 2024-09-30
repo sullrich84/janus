@@ -1,7 +1,9 @@
 package de.codecentric.janus.carddav.resolver.dav
 
 import de.codecentric.janus.carddav.request.CardDavRequestContext
+import de.codecentric.janus.carddav.resolver.Helper.getUidFromHref
 import de.codecentric.janus.carddav.resolver.ResolverContext
+import de.codecentric.janus.vcard.VCardService
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
@@ -16,13 +18,18 @@ import org.springframework.stereotype.Component
  * @since 1.0.0
  */
 @Component
-class GetETagPropResolver : DavPropResolver("getetag") {
+class GetETagPropResolver(private val service: VCardService) : DavPropResolver("getetag") {
+
+    override fun supports(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Boolean {
+        return super.supports(resolverContext, cardDavRequestContext)
+                && resolverContext.href.endsWith(".vcf")
+                && service.hasVCard(getUidFromHref(resolverContext.href))
+    }
 
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
-            "href" {
-                text("/codecentric/")
-            }
+            val uid = resolverContext.href.substringAfterLast("/").substringBeforeLast(".vcf")
+            text(service.getETag(uid))
         }
     }
 }

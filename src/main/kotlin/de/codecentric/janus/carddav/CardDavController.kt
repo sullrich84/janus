@@ -3,6 +3,7 @@ package de.codecentric.janus.carddav
 import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.request.WebDavRequest
 import de.codecentric.janus.carddav.response.MultiStatusResponse
+import de.codecentric.janus.vcard.VCardService
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.MULTI_STATUS
@@ -146,10 +147,16 @@ class CardDavController(val service: CardDavService) {
         @RequestHeader(defaultValue = "0") depth: Int,
         @RequestHeader(defaultValue = "f") brief: String,
     ): ResponseEntity<MultiStatusResponse> {
+        val locations = when(webDavRequest.method) {
+            WebDavRequest.RequestMethod.PROPFIND -> listOf("/$principal/addressbook/")
+            WebDavRequest.RequestMethod.ADDRESSBOOK_MULTIGET -> webDavRequest.hrefs
+            else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Method ${webDavRequest.method} not supported")
+        }
+
         val cardDavRequestContext = CardDavRequestContext(
             depth = depth,
             brief = brief == "t",
-            locations = listOf("/$principal/addressbook/"),
+            locations = locations,
             webDavRequest = webDavRequest,
             principal = principal,
         )

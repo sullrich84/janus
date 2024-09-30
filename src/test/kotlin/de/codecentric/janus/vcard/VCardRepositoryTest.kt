@@ -1,6 +1,7 @@
 package de.codecentric.janus.vcard
 
 import com.ninjasquad.springmockk.MockkBean
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -64,6 +65,24 @@ class VCardRepositoryTest {
             revision = LocalDateTime(2024, 9, 30, 12, 0, 0, 0),
             url = "https://codecentric.de",
         )
+    }
+
+    @Test
+    @DisplayName("should read all uid")
+    fun shouldReadAllUid() {
+        val path = this::class.java.classLoader.getResource("vcard")?.path
+        every { configuration.path } returns path.toString()
+
+        subject.findAllUid() shouldBeEqual setOf("red", "blue")
+    }
+
+    @Test
+    @DisplayName("should read all")
+    fun shouldReadAll() {
+        val path = this::class.java.classLoader.getResource("vcard")?.path
+        every { configuration.path } returns path.toString()
+
+        subject.findAll().map { it.uid } shouldContainExactlyInAnyOrder setOf("red", "blue")
     }
 
     @Test
