@@ -1,6 +1,6 @@
 spring:
   application:
-    name: Janus CardDav
+    name: Apus CardDav
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.web.servlet.error.ErrorMvcAutoConfiguration
   docker:
@@ -9,7 +9,6 @@ spring:
       file: docker-compose.yaml
       skip:
         in-tests: false
-
 
 server:
   error:
