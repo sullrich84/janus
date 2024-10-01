@@ -10,6 +10,7 @@ spring:
       skip:
         in-tests: false
 
+
 server:
   error:
     whitelabel:
@@ -35,3 +36,7 @@ management:
   tracing:
     sampling:
       probability: 1.0
+
+vcard:
+  path: /Users/sullrich/Desktop/vcards
+

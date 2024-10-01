@@ -1,17 +1,20 @@
 package de.codecentric.janus.vcard
 
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 import org.springframework.stereotype.Service
 
 @Service
 class VCardService(private val repository: VCardRepository) {
 
     fun getLatestSyncToken(): String {
-        return getAll().maxOfOrNull { it.revision }?.toString() ?: "0"
+        return getAll().maxOfOrNull { it.revision }?.toString() ?: createNewToken()
     }
 
     fun getLatestCTag(): String {
-        return getAll().maxOfOrNull { it.revision }?.toString() ?: "0"
+        return getAll().maxOfOrNull { it.revision }?.toString() ?: createNewToken()
     }
 
     fun getAll(): Set<VCard> {
@@ -32,5 +35,10 @@ class VCardService(private val repository: VCardRepository) {
 
     fun getUpdatedSince(lastSync: LocalDateTime): Set<VCard> {
         return repository.findAll().filter { it.revision > lastSync }.toSet()
+    }
+
+    private fun createNewToken(): String {
+        val timestamp = LocalDateTime(2024, 1, 1, 0, 0, 0, 0)
+        return LocalDateTime.Formats.ISO.format(timestamp)
     }
 }

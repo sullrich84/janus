@@ -12,8 +12,6 @@ class ResourceTypePropResolver : DavPropResolver("resourcetype") {
 
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
-            "collection" {}
-
             when (resolverContext.href) {
                 "/${cardDavRequestContext.principal}/" -> {
                     "principal" {}
@@ -24,6 +22,8 @@ class ResourceTypePropResolver : DavPropResolver("resourcetype") {
                     (CARDDAV.appendPrefix("addressbook")) {}
                 }
             }
+
+            "collection" {}
         }
     }
 }

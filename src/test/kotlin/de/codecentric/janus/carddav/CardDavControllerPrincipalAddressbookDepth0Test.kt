@@ -38,13 +38,13 @@ class CardDavControllerPrincipalAddressbookDepth0Test {
             .header("Depth", "0")
             .bodyValue(
                 """
-                        <A:propfind xmlns:A="DAV:"> 
-                            <A:prop> 
-                                <C:getctag xmlns:C="http://calendarserver.org/ns/" /> 
-                                <A:sync-token /> 
-                            </A:prop> 
-                        </A:propfind>
-                        """.trimIndent()
+                <A:propfind xmlns:A="DAV:"> 
+                    <A:prop> 
+                        <C:getctag xmlns:C="http://calendarserver.org/ns/" /> 
+                        <A:sync-token /> 
+                    </A:prop> 
+                </A:propfind>
+                """.trimIndent()
             )
             .headers { it.addAll(defaultHeaders) }
             .exchange()
@@ -56,9 +56,9 @@ class CardDavControllerPrincipalAddressbookDepth0Test {
         }
 
         @Test
-        @DisplayName("should respond with content-type text/xml")
+        @DisplayName("should respond with content-type text/xml and charset utf-8")
         fun shouldRespondWithContentTypeTextXml() {
-            response.expectHeader().contentType(TEXT_XML_VALUE)
+            response.expectHeader().contentType("text/xml; charset=utf-8")
         }
 
         @Test

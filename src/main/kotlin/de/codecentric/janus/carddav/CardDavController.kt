@@ -8,6 +8,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.MULTI_STATUS
 import org.springframework.http.HttpStatus.OK
+import org.springframework.http.MediaType
 import org.springframework.http.MediaType.TEXT_XML
 import org.springframework.http.MediaType.TEXT_XML_VALUE
 import org.springframework.http.ResponseEntity
@@ -30,7 +31,7 @@ import org.springframework.web.server.ResponseStatusException
 @Controller
 class CardDavController(val service: CardDavService) {
 
-    @RequestMapping("/", produces = [TEXT_XML_VALUE])
+    @RequestMapping("/", produces = ["text/xml; charset=utf-8"])
     fun handlePropFindRequest(
         request: HttpServletRequest,
         @RequestBody webDavRequest: WebDavRequest,
@@ -46,16 +47,19 @@ class CardDavController(val service: CardDavService) {
 
         val response = service.resolve(context = cardDavRequestContext)
 
-        return ResponseEntity.status(MULTI_STATUS).contentType(TEXT_XML)
+        return ResponseEntity.status(MULTI_STATUS)
+            .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
             // TODO: Check if we only need
             //  DAV: 1, 3, addressbook
             //  Allow: GET, HEAD, OPTIONS, REPORT
-            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol").body(response)
+            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
+            .body(response)
     }
 
-    @RequestMapping("/**", method = [OPTIONS])
+    @RequestMapping("/**", method = [OPTIONS], produces = ["text/xml; charset=utf-8"])
     fun handlePrincipalOptionsRequest(): ResponseEntity<Void> {
-        return ResponseEntity.status(OK).allow(
+        return ResponseEntity.status(OK)
+            .allow(
                 // TODO: Check if we only need
                 //  DAV: 1, 3, addressbook
                 //  Allow: GET, HEAD, OPTIONS, REPORT
@@ -71,10 +75,12 @@ class CardDavController(val service: CardDavService) {
                 HttpMethod.valueOf("PROPFIND"),
                 HttpMethod.valueOf("PROPPATCH"),
                 HttpMethod.valueOf("REPORT"),
-            ).header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol").build()
+            )
+            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
+            .build()
     }
 
-    @RequestMapping("/{principal}/", method = [], produces = [TEXT_XML_VALUE])
+    @RequestMapping("/{principal}/", produces = ["text/xml; charset=utf-8"])
     fun handlePrincipalPropFindRequest(
         @PathVariable principal: String,
         @RequestBody webDavRequest: WebDavRequest,
@@ -91,14 +97,16 @@ class CardDavController(val service: CardDavService) {
 
         val response = service.resolve(cardDavRequestContext)
 
-        return ResponseEntity.status(MULTI_STATUS).contentType(TEXT_XML)
+        return ResponseEntity.status(MULTI_STATUS)
+            .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
             // TODO: Check if we only need
             //  DAV: 1, 3, addressbook
             //  Allow: GET, HEAD, OPTIONS, REPORT
-            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol").body(response)
+            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
+            .body(response)
     }
 
-    @RequestMapping("/{principal}/addressbook", produces = [TEXT_XML_VALUE])
+    @RequestMapping("/{principal}/addressbook", produces = ["text/xml; charset=utf-8"])
     fun handlePrincipalAddressbookPropFindRequest(
         @PathVariable principal: String,
         @RequestBody webDavRequest: WebDavRequest,
@@ -115,14 +123,16 @@ class CardDavController(val service: CardDavService) {
 
         val response = service.resolve(cardDavRequestContext)
 
-        return ResponseEntity.status(MULTI_STATUS).contentType(TEXT_XML)
+        return ResponseEntity.status(MULTI_STATUS)
+            .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
             // TODO: Check if we only need
             //  DAV: 1, 3, addressbook
             //  Allow: GET, HEAD, OPTIONS, REPORT
-            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol").body(response)
+            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
+            .body(response)
     }
 
-    @RequestMapping("/{principal}/addressbook/", produces = [TEXT_XML_VALUE])
+    @RequestMapping("/{principal}/addressbook/", produces = ["text/xml; charset=utf-8"])
     fun handlePrincipalAddressbookPathPropFindRequest(
         @PathVariable principal: String,
         @RequestBody webDavRequest: WebDavRequest,
@@ -139,15 +149,19 @@ class CardDavController(val service: CardDavService) {
 
         val response = service.resolve(cardDavRequestContext)
 
-        return ResponseEntity.status(MULTI_STATUS).contentType(TEXT_XML)
+        return ResponseEntity.status(MULTI_STATUS)
+            .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
             // TODO: Check if we only need
             //  DAV: 1, 3, addressbook
             //  Allow: GET, HEAD, OPTIONS, REPORT
-            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol").body(response)
+            .header("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
+            .body(response)
     }
 
-    @RequestMapping("/.well-known/carddav")
+    @RequestMapping("/.well-known/carddav", produces = ["text/xml; charset=utf-8"])
     fun handleWellKnownCardDavRequest(): ResponseEntity<Void> {
-        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY).header("Location", "/").build()
+        return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
+            .header("Location", "/")
+            .build()
     }
 }

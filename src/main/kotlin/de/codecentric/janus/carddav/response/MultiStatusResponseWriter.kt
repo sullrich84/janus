@@ -7,6 +7,8 @@ import de.codecentric.janus.Status.OK
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
 import java.io.ByteArrayOutputStream
+import java.nio.charset.StandardCharsets
+import java.nio.charset.StandardCharsets.UTF_8
 
 /**
  * Builder for creating a multi status response defined by the CardDAV protocol.
@@ -24,6 +26,7 @@ class MultiStatusResponseWriter(source: MultiStatusResponse) {
      */
     init {
         document = xml("multistatus") {
+            encoding = "utf-8"
             xmlns = DAV.uri
 
             // Append all namespaces referenced in the response
@@ -46,7 +49,7 @@ class MultiStatusResponseWriter(source: MultiStatusResponse) {
                                 }
                             }
                             "status" {
-                                text(OK.status)
+                                unsafeText(OK.status)
                             }
                         }
                     }
@@ -80,7 +83,7 @@ class MultiStatusResponseWriter(source: MultiStatusResponse) {
      */
     fun write(): ByteArrayOutputStream {
         val outputStream = ByteArrayOutputStream()
-        document.toString(true).byteInputStream().copyTo(outputStream)
+        document.toString(false).byteInputStream(UTF_8).copyTo(outputStream)
         return outputStream
     }
 }

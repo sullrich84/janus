@@ -71,9 +71,9 @@ class CardDavControllerPrincipalDepth1Test {
         }
 
         @Test
-        @DisplayName("should respond with content-type text/xml")
+        @DisplayName("should respond with content-type text/xml and charset utf-8")
         fun shouldRespondWithContentTypeTextXml() {
-            response.expectHeader().contentType(TEXT_XML_VALUE)
+            response.expectHeader().contentType("text/xml; charset=utf-8")
         }
 
         @Test

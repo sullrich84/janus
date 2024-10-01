@@ -3,7 +3,6 @@ package de.codecentric.janus.carddav.response
 import org.springframework.http.HttpInputMessage
 import org.springframework.http.HttpOutputMessage
 import org.springframework.http.MediaType
-import org.springframework.http.MediaType.TEXT_XML
 import org.springframework.http.converter.HttpMessageConverter
 import org.springframework.stereotype.Component
 
@@ -16,16 +15,20 @@ import org.springframework.stereotype.Component
 @Component
 class MultiStatusResponseConverter : HttpMessageConverter<MultiStatusResponse> {
 
+    companion object {
+        private val TEXT_XML_UTF8 = MediaType.valueOf("text/xml; charset=utf-8")
+    }
+
     override fun canRead(clazz: Class<*>, mediaType: MediaType?): Boolean {
         return false
     }
 
     override fun canWrite(clazz: Class<*>, mediaType: MediaType?): Boolean {
-        return MultiStatusResponse::class.java.isAssignableFrom(clazz) && TEXT_XML.includes(mediaType)
+        return MultiStatusResponse::class.java.isAssignableFrom(clazz) && TEXT_XML_UTF8.includes(mediaType)
     }
 
     override fun getSupportedMediaTypes(): MutableList<MediaType> {
-        return mutableListOf(TEXT_XML)
+        return mutableListOf(TEXT_XML_UTF8)
     }
 
     override fun write(response: MultiStatusResponse, contentType: MediaType?, outputMessage: HttpOutputMessage) {
