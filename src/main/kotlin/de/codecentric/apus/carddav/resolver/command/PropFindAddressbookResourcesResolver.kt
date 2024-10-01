@@ -2,7 +2,6 @@ package de.codecentric.apus.carddav.resolver.command
 
 import de.codecentric.apus.carddav.request.RequestContext
 import de.codecentric.apus.carddav.request.RequestMethod.*
-import de.codecentric.apus.carddav.response.MultiStatusResponse
 import de.codecentric.apus.vcard.VCardService
 import org.springframework.stereotype.Component
 
@@ -22,9 +21,5 @@ class PropFindAddressbookResourcesResolver(private val service: VCardService) : 
             .toSet()
 
         return setOf(context.requestUri.path).plus(vCardLocations)
-    }
-
-    override fun updateResponse(context: RequestContext, response: MultiStatusResponse): MultiStatusResponse {
-        return response
     }
 }

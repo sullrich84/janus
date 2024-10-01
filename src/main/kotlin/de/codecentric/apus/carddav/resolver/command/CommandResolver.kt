@@ -12,5 +12,7 @@ abstract class CommandResolver(val method: RequestMethod) {
 
     abstract fun resolveLocations(context: RequestContext): Set<String>
 
-    abstract fun updateResponse(context: RequestContext, response: MultiStatusResponse): MultiStatusResponse
+    open fun updateResponse(context: RequestContext, response: MultiStatusResponse): MultiStatusResponse {
+        return response
+    }
 }

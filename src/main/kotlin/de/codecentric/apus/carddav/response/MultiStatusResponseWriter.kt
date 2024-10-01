@@ -82,7 +82,7 @@ class MultiStatusResponseWriter(source: MultiStatusResponse) {
      */
     fun write(): ByteArrayOutputStream {
         val outputStream = ByteArrayOutputStream()
-        document.toString(true).byteInputStream(UTF_8).copyTo(outputStream)
+        document.toString(false).byteInputStream(UTF_8).copyTo(outputStream)
         return outputStream
     }
 }

@@ -2,7 +2,6 @@ package de.codecentric.apus.carddav.resolver.command
 
 import de.codecentric.apus.carddav.request.RequestContext
 import de.codecentric.apus.carddav.request.RequestMethod.*
-import de.codecentric.apus.carddav.response.MultiStatusResponse
 import org.springframework.stereotype.Component
 
 @Component
@@ -13,12 +12,9 @@ class PropFindPrincipalResourcesResolver : CommandResolver(PROPFIND) {
     }
 
     override fun resolveLocations(context: RequestContext): Set<String> {
-        val locations = mutableSetOf("/${context.principal}/")
-        if (context.depth > 0) locations.add("/${context.principal}/addressbook/")
-        return locations
-    }
-
-    override fun updateResponse(context: RequestContext, response: MultiStatusResponse): MultiStatusResponse {
-        return response
+        return setOfNotNull(
+            "/${context.principal}/",
+            "/${context.principal}/addressbook/".takeIf { context.depth > 0 }
+        )
     }
 }
