@@ -3,6 +3,7 @@ package de.codecentric.apus.carddav
 import com.ninjasquad.springmockk.MockkBean
 import de.codecentric.apus.carddav.Namespace.DAV
 import de.codecentric.apus.carddav.request.CardDavRequestContext
+import de.codecentric.apus.carddav.request.RequestMethod
 import de.codecentric.apus.carddav.request.WebDavRequest
 import de.codecentric.apus.carddav.resolver.dav.CurrentUserPrincipalPropResolver
 import de.codecentric.apus.vcard.VCardService
@@ -36,7 +37,7 @@ class CardDavServiceTest {
             )
 
             val webDavRequest = WebDavRequest(
-                method = WebDavRequest.RequestMethod.PROPFIND,
+                method = RequestMethod.PROPFIND,
                 namespace = DAV,
                 props = props
             )
@@ -54,7 +55,7 @@ class CardDavServiceTest {
             multiStatusResponse.ok.first().toString() shouldBe """
                 <current-user-principal>
                 	<href>
-                		/codecentric/
+                		/anonymous/
                 	</href>
                 </current-user-principal>
             """.trimIndent()

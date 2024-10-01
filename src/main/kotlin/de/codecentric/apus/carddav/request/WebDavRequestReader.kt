@@ -27,7 +27,7 @@ class WebDavRequestReader(private val source: InputStream) {
     fun read(): WebDavRequest {
         val document = builder.parse(InputSource(source))
         val rootElement = document.documentElement
-        val method = WebDavRequest.RequestMethod.fromString(rootElement.localName)
+        val method = RequestMethod.fromString(rootElement.localName)
         val namespace = Namespace.fromString(rootElement.namespaceURI)
 
         val props = getProps(rootElement)

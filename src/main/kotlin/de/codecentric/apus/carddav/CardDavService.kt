@@ -1,7 +1,7 @@
 package de.codecentric.apus.carddav
 
 import de.codecentric.apus.carddav.request.CardDavRequestContext
-import de.codecentric.apus.carddav.request.WebDavRequest.RequestMethod.*
+import de.codecentric.apus.carddav.request.RequestMethod.*
 import de.codecentric.apus.carddav.resolver.PropResolver
 import de.codecentric.apus.carddav.resolver.ResolverContext
 import de.codecentric.apus.carddav.response.MultiStatusResponse

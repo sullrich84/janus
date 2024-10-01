@@ -1,6 +1,7 @@
 package de.codecentric.apus.carddav
 
 import de.codecentric.apus.carddav.request.CardDavRequestContext
+import de.codecentric.apus.carddav.request.RequestContext
 import de.codecentric.apus.carddav.request.WebDavRequest
 import de.codecentric.apus.carddav.response.MultiStatusResponse
 import jakarta.servlet.http.HttpServletRequest
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -34,6 +36,7 @@ class CardDavController(val service: CardDavService) {
         @RequestBody webDavRequest: WebDavRequest,
         @RequestHeader(defaultValue = "0") depth: Int,
         @RequestHeader(defaultValue = "f") brief: String,
+//        requestContext: RequestContext,
     ): ResponseEntity<MultiStatusResponse> {
         val cardDavRequestContext = CardDavRequestContext(
             depth = 0,
@@ -42,11 +45,12 @@ class CardDavController(val service: CardDavService) {
             webDavRequest = webDavRequest,
         )
 
+//        requestContext.command = webDavRequest
         val response = service.resolve(context = cardDavRequestContext)
 
         return ResponseEntity.status(MULTI_STATUS)
             .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
-            .header("DAV", "1, 2, 3, addressbook, extended-mkcol")
+            .header("DAV", "1, 2, 3, addressbook")
             .body(response)
     }
 
@@ -69,6 +73,7 @@ class CardDavController(val service: CardDavService) {
         @RequestBody webDavRequest: WebDavRequest,
         @RequestHeader(defaultValue = "0") depth: Int,
         @RequestHeader(defaultValue = "f") brief: String,
+//        requestContext: RequestContext,
     ): ResponseEntity<MultiStatusResponse> {
         val cardDavRequestContext = CardDavRequestContext(
             depth = depth,
@@ -78,6 +83,7 @@ class CardDavController(val service: CardDavService) {
             principal = principal,
         )
 
+//        requestContext.command = webDavRequest
         val response = service.resolve(cardDavRequestContext)
 
         return ResponseEntity.status(MULTI_STATUS)
@@ -92,6 +98,7 @@ class CardDavController(val service: CardDavService) {
         @RequestBody webDavRequest: WebDavRequest,
         @RequestHeader(defaultValue = "0") depth: Int,
         @RequestHeader(defaultValue = "f") brief: String,
+//        requestContext: RequestContext,
     ): ResponseEntity<MultiStatusResponse> {
         val cardDavRequestContext = CardDavRequestContext(
             depth = depth,
@@ -101,6 +108,7 @@ class CardDavController(val service: CardDavService) {
             principal = principal,
         )
 
+//        requestContext.command = webDavRequest
         val response = service.resolve(cardDavRequestContext)
 
         return ResponseEntity.status(MULTI_STATUS)
@@ -115,6 +123,7 @@ class CardDavController(val service: CardDavService) {
         @RequestBody webDavRequest: WebDavRequest,
         @RequestHeader(defaultValue = "0") depth: Int,
         @RequestHeader(defaultValue = "f") brief: String,
+//        requestContext: RequestContext,
     ): ResponseEntity<MultiStatusResponse> {
         val cardDavRequestContext = CardDavRequestContext(
             depth = depth,
@@ -124,6 +133,7 @@ class CardDavController(val service: CardDavService) {
             principal = principal,
         )
 
+//        requestContext.command = webDavRequest
         val response = service.resolve(cardDavRequestContext)
 
         return ResponseEntity.status(MULTI_STATUS)

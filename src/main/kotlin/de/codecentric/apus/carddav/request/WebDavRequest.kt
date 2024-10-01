@@ -24,18 +24,6 @@ data class WebDavRequest(
     val syncLevel: Int? = null,
 ) {
 
-    enum class RequestMethod(val value: String) {
-        PROPFIND("propfind"),
-        SYNC_COLLECTION("sync-collection"),
-        ADDRESSBOOK_MULTIGET("addressbook-multiget");
-
-        companion object {
-            fun fromString(value: String): RequestMethod {
-                return entries.first { it.value == value }
-            }
-        }
-    }
-
     data class Prop(
         val name: String,
         val namespace: Namespace,

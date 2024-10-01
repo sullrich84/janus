@@ -11,6 +11,7 @@ class CurrentUserPrivilegeSetPropResolver : DavPropResolver("current-user-privil
 
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
+            // TODO: Reduce this to read only
             listOf("read", "all", "write", "write-properties", "write-content").forEach {
                 "privilege" {
                     it {}

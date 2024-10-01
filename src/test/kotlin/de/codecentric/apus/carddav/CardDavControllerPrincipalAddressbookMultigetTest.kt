@@ -79,7 +79,7 @@ class CardDavControllerPrincipalAddressbookMultigetTest {
         @Test
         @DisplayName("should have default CardDav headers")
         fun shouldHaveDefaultCardDavHeaders() {
-            response.expectHeader().valueEquals("DAV", "1, 2, 3, calendar-access, addressbook, extended-mkcol")
+            response.expectHeader().valueEquals("DAV", "1, 2, 3, addressbook")
         }
 
         @Test

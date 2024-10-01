@@ -37,7 +37,7 @@ class WebDavRequestConverterTest {
         @Test
         @DisplayName("should have expected method")
         fun shouldHaveExpectedMethod() {
-            subject.method shouldBe WebDavRequest.RequestMethod.PROPFIND
+            subject.method shouldBe RequestMethod.PROPFIND
         }
 
         @Test
@@ -83,7 +83,7 @@ class WebDavRequestConverterTest {
         @Test
         @DisplayName("should have expected method")
         fun shouldHaveExpectedMethod() {
-            subject.method shouldBe WebDavRequest.RequestMethod.PROPFIND
+            subject.method shouldBe RequestMethod.PROPFIND
         }
 
         @Test
@@ -129,7 +129,7 @@ class WebDavRequestConverterTest {
         @Test
         @DisplayName("should have expected method")
         fun shouldHaveExpectedMethod() {
-            subject.method shouldBe WebDavRequest.RequestMethod.SYNC_COLLECTION
+            subject.method shouldBe RequestMethod.SYNC_COLLECTION
         }
 
         @Test
@@ -181,7 +181,7 @@ class WebDavRequestConverterTest {
         @Test
         @DisplayName("should have expected method")
         fun shouldHaveExpectedMethod() {
-            subject.method shouldBe WebDavRequest.RequestMethod.ADDRESSBOOK_MULTIGET
+            subject.method shouldBe RequestMethod.ADDRESSBOOK_MULTIGET
         }
 
         @Test
