@@ -1,8 +1,8 @@
-package de.codecentric.apus.carddav.resolver.dav
+package de.codecentric.apus.carddav.resolver.prop.dav
 
-import de.codecentric.apus.carddav.request.CardDavRequestContext
-import de.codecentric.apus.carddav.resolver.Helper.getUidFromHref
-import de.codecentric.apus.carddav.resolver.ResolverContext
+import de.codecentric.apus.carddav.Helper.getUidFromHref
+import de.codecentric.apus.carddav.request.RequestContext
+import de.codecentric.apus.carddav.resolver.prop.ResolverContext
 import de.codecentric.apus.vcard.VCardService
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
@@ -20,14 +20,14 @@ import org.springframework.stereotype.Component
 @Component
 class GetETagPropResolver(private val service: VCardService) : DavPropResolver("getetag") {
 
-    override fun supports(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Boolean {
+    override fun supports(resolverContext: ResolverContext, requestContext: RequestContext): Boolean {
         return super.supports(
             resolverContext,
-            cardDavRequestContext
+            requestContext
         ) && (isVCardRequest(resolverContext) || isAddressbookRequest(resolverContext))
     }
 
-    override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
+    override fun resolve(resolverContext: ResolverContext, requestContext: RequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
             val eTag = if (isVCardRequest(resolverContext)) {
                 val uid = resolverContext.href.substringAfterLast("/").substringBeforeLast(".vcf")

@@ -1,4 +1,4 @@
-package de.codecentric.apus.carddav.resolver
+package de.codecentric.apus.carddav
 
 object Helper {
     fun getUidFromHref(href: String): String {

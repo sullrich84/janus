@@ -23,7 +23,6 @@ class RequestContextResolver : HandlerMethodArgumentResolver {
         binder: WebDataBinderFactory?,
     ): RequestContext {
         val nativeRequest = request.nativeRequest as HttpServletRequest
-        val method = nativeRequest.method.let { RequestMethod.fromString(it) }
         val requestUri = URI(nativeRequest.requestURL.toString())
 
         val depth = request.getHeader("depth")?.toIntOrNull() ?: 0
@@ -34,7 +33,6 @@ class RequestContextResolver : HandlerMethodArgumentResolver {
         val principal = request.getHeader("principal") ?: "anonymous"
 
         return RequestContext(
-            method = method,
             requestUri = requestUri,
             principal = principal,
             depth = depth,

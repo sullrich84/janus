@@ -1,4 +1,4 @@
-package de.codecentric.apus.carddav.resolver
+package de.codecentric.apus.carddav.resolver.prop
 
 import de.codecentric.apus.carddav.Namespace
 

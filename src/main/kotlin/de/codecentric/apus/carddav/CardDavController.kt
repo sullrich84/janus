@@ -1,10 +1,8 @@
 package de.codecentric.apus.carddav
 
-import de.codecentric.apus.carddav.request.CardDavRequestContext
 import de.codecentric.apus.carddav.request.RequestContext
 import de.codecentric.apus.carddav.request.WebDavRequest
 import de.codecentric.apus.carddav.response.MultiStatusResponse
-import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.MULTI_STATUS
@@ -12,10 +10,8 @@ import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod.OPTIONS
 
@@ -32,21 +28,12 @@ class CardDavController(val service: CardDavService) {
 
     @RequestMapping("/", produces = ["text/xml; charset=utf-8"])
     fun handlePropFindRequest(
-        request: HttpServletRequest,
         @RequestBody webDavRequest: WebDavRequest,
-        @RequestHeader(defaultValue = "0") depth: Int,
-        @RequestHeader(defaultValue = "f") brief: String,
-//        requestContext: RequestContext,
+        requestContext: RequestContext,
     ): ResponseEntity<MultiStatusResponse> {
-        val cardDavRequestContext = CardDavRequestContext(
-            depth = 0,
-            brief = brief == "t",
-            locations = listOf("/"),
-            webDavRequest = webDavRequest,
-        )
 
-//        requestContext.command = webDavRequest
-        val response = service.resolve(context = cardDavRequestContext)
+        requestContext.command = webDavRequest
+        val response = service.resolve(requestContext)
 
         return ResponseEntity.status(MULTI_STATUS)
             .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
@@ -71,20 +58,12 @@ class CardDavController(val service: CardDavService) {
     fun handlePrincipalPropFindRequest(
         @PathVariable principal: String,
         @RequestBody webDavRequest: WebDavRequest,
-        @RequestHeader(defaultValue = "0") depth: Int,
-        @RequestHeader(defaultValue = "f") brief: String,
-//        requestContext: RequestContext,
+        requestContext: RequestContext,
     ): ResponseEntity<MultiStatusResponse> {
-        val cardDavRequestContext = CardDavRequestContext(
-            depth = depth,
-            brief = brief == "t",
-            locations = listOf("/$principal/"),
-            webDavRequest = webDavRequest,
-            principal = principal,
-        )
 
-//        requestContext.command = webDavRequest
-        val response = service.resolve(cardDavRequestContext)
+        requestContext.command = webDavRequest
+        requestContext.principal = principal
+        val response = service.resolve(requestContext)
 
         return ResponseEntity.status(MULTI_STATUS)
             .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
@@ -96,20 +75,12 @@ class CardDavController(val service: CardDavService) {
     fun handlePrincipalAddressbookPropFindRequest(
         @PathVariable principal: String,
         @RequestBody webDavRequest: WebDavRequest,
-        @RequestHeader(defaultValue = "0") depth: Int,
-        @RequestHeader(defaultValue = "f") brief: String,
-//        requestContext: RequestContext,
+        requestContext: RequestContext,
     ): ResponseEntity<MultiStatusResponse> {
-        val cardDavRequestContext = CardDavRequestContext(
-            depth = depth,
-            brief = brief == "t",
-            locations = listOf("/$principal/addressbook/"),
-            webDavRequest = webDavRequest,
-            principal = principal,
-        )
 
-//        requestContext.command = webDavRequest
-        val response = service.resolve(cardDavRequestContext)
+        requestContext.command = webDavRequest
+        requestContext.principal = principal
+        val response = service.resolve(requestContext)
 
         return ResponseEntity.status(MULTI_STATUS)
             .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
@@ -121,20 +92,12 @@ class CardDavController(val service: CardDavService) {
     fun handlePrincipalAddressbookPathPropFindRequest(
         @PathVariable principal: String,
         @RequestBody webDavRequest: WebDavRequest,
-        @RequestHeader(defaultValue = "0") depth: Int,
-        @RequestHeader(defaultValue = "f") brief: String,
-//        requestContext: RequestContext,
+        requestContext: RequestContext,
     ): ResponseEntity<MultiStatusResponse> {
-        val cardDavRequestContext = CardDavRequestContext(
-            depth = depth,
-            brief = brief == "t",
-            locations = listOf("/$principal/addressbook/"),
-            webDavRequest = webDavRequest,
-            principal = principal,
-        )
 
-//        requestContext.command = webDavRequest
-        val response = service.resolve(cardDavRequestContext)
+        requestContext.command = webDavRequest
+        requestContext.principal = principal
+        val response = service.resolve(requestContext)
 
         return ResponseEntity.status(MULTI_STATUS)
             .contentType(MediaType.valueOf("text/xml; charset=utf-8"))

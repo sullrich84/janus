@@ -1,7 +1,7 @@
-package de.codecentric.apus.carddav.resolver
+package de.codecentric.apus.carddav.resolver.prop
 
 import de.codecentric.apus.carddav.Namespace
-import de.codecentric.apus.carddav.request.CardDavRequestContext
+import de.codecentric.apus.carddav.request.RequestContext
 import org.redundent.kotlin.xml.Node
 
 /**
@@ -19,12 +19,12 @@ abstract class PropResolver(open val propName: String, open val namespace: Names
      * Checks if this resolver supports the given request context
      * by comparing the property name and the default namespace.
      */
-    open fun supports(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Boolean {
+    open fun supports(resolverContext: ResolverContext, requestContext: RequestContext): Boolean {
         return propName == resolverContext.propName && namespace == resolverContext.namespace
     }
 
     /**
      * Resolves the property for the given request context.
      */
-    abstract fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node
+    abstract fun resolve(resolverContext: ResolverContext, requestContext: RequestContext): Node
 }

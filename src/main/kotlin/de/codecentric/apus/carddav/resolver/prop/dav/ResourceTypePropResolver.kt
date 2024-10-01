@@ -1,8 +1,8 @@
-package de.codecentric.apus.carddav.resolver.dav
+package de.codecentric.apus.carddav.resolver.prop.dav
 
 import de.codecentric.apus.carddav.Namespace.CARDDAV
-import de.codecentric.apus.carddav.request.CardDavRequestContext
-import de.codecentric.apus.carddav.resolver.ResolverContext
+import de.codecentric.apus.carddav.request.RequestContext
+import de.codecentric.apus.carddav.resolver.prop.ResolverContext
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
@@ -10,14 +10,14 @@ import org.springframework.stereotype.Component
 @Component
 class ResourceTypePropResolver : DavPropResolver("resourcetype") {
 
-    override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
+    override fun resolve(resolverContext: ResolverContext, requestContext: RequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
             when (resolverContext.href) {
-                "/${cardDavRequestContext.principal}/" -> {
+                "/${requestContext.principal}/" -> {
                     "principal" {}
                 }
 
-                "/${cardDavRequestContext.principal}/addressbook/" -> {
+                "/${requestContext.principal}/addressbook/" -> {
                     namespace(CARDDAV.abbreviation, CARDDAV.uri)
                     (CARDDAV.appendPrefix("addressbook")) {}
                 }

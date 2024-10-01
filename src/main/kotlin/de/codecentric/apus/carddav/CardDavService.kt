@@ -1,13 +1,11 @@
 package de.codecentric.apus.carddav
 
-import de.codecentric.apus.carddav.request.CardDavRequestContext
-import de.codecentric.apus.carddav.request.RequestMethod.*
-import de.codecentric.apus.carddav.resolver.PropResolver
-import de.codecentric.apus.carddav.resolver.ResolverContext
+import de.codecentric.apus.carddav.request.RequestContext
+import de.codecentric.apus.carddav.resolver.command.CommandResolver
+import de.codecentric.apus.carddav.resolver.prop.PropResolver
+import de.codecentric.apus.carddav.resolver.prop.ResolverContext
 import de.codecentric.apus.carddav.response.MultiStatusResponse
 import de.codecentric.apus.carddav.response.StatusResponse
-import de.codecentric.apus.vcard.VCardService
-import kotlinx.datetime.LocalDateTime
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
 import org.springframework.stereotype.Component
@@ -15,93 +13,31 @@ import org.springframework.stereotype.Component
 /**
  * Service class for resolving CardDAV properties.
  *
- * @param resolvers The list of available property resolvers in ApplicationContext
+ * @param propResolver The list of available property resolvers in ApplicationContext
 
  * @author Sebastian Ullrich
  * @since 1.0.0
  */
 @Component
-class CardDavService(private val resolvers: MutableList<out PropResolver>, private val service: VCardService) {
+class CardDavService(private val propResolver: List<PropResolver>, private val cmdResolver: List<CommandResolver>) {
 
-    fun resolve(context: CardDavRequestContext): MultiStatusResponse {
-        if (context.webDavRequest.method == SYNC_COLLECTION) {
-            return resolveSyncCollection(context)
-        }
+    fun resolve(context: RequestContext): MultiStatusResponse {
+        val resolver = cmdResolver.first { resolver -> resolver.supports(context) }
+        val locations = resolver.resolveLocations(context)
+        val responses = locations.map { resolveStatusResponse(it, context) }
 
-        val enrichedContext = fillUpLocations(context)
-        val responses = enrichedContext.locations.map { resolveStatusResponse(it, enrichedContext) }
-
-        return MultiStatusResponse(responses = responses.toList())
+        val response = MultiStatusResponse(responses = responses.toList())
+        return resolver.updateResponse(context, response)
     }
 
-    fun fillUpLocations(context: CardDavRequestContext): CardDavRequestContext {
-        val additionalLocations = when (val root = context.locations.first()) {
-            "/${context.principal}/" -> {
-                if (context.depth == 0) {
-                    // Only the principal
-                    listOf(root)
-                } else {
-                    // Add principal specific collections
-                    listOf(root, "/${context.principal}/addressbook/")
-                }
-            }
-
-            "/${context.principal}/addressbook/" -> {
-                // Add collection specific resources
-                when (context.webDavRequest.method) {
-                    PROPFIND -> {
-                        if (context.depth == 0) {
-                            // Only the principal
-                            listOf(root)
-                        } else {
-                            // All vcards in the addressbook
-                            val vcardLocations = service.getAll()
-                                .map { "/${context.principal}/addressbook/${it.uid}.vcf" }
-                                .toList()
-
-                            listOf(root).plus(vcardLocations)
-                        }
-                    }
-
-                    ADDRESSBOOK_MULTIGET -> {
-                        // All vcards that have been requested within the request
-                        context.webDavRequest.hrefs.toList()
-                    }
-
-                    SYNC_COLLECTION -> {
-                        // Only the vcards that have changed since the last sync
-                        listOf(root)
-                    }
-                }
-            }
-
-            else -> listOf(root)
-        }
-
-        return context.copy(locations = additionalLocations)
-    }
-
-    fun resolveSyncCollection(context: CardDavRequestContext): MultiStatusResponse {
-        val lastSyncToken = context.webDavRequest.syncToken!!
-        val lastSync = LocalDateTime.Formats.ISO.parse(lastSyncToken)
-        val updatedSince = service.getUpdatedSince(lastSync)
-
-        val updatedResourceLocations = updatedSince.map { "/${context.principal}/addressbook/${it.uid}.vcf" }
-            .map { resolveStatusResponse(it, context) }.toList()
-
-        val syncToken = service.getLatestSyncToken()
-
-        return MultiStatusResponse(responses = updatedResourceLocations, syncToken = syncToken)
-    }
-
-    private fun resolveStatusResponse(location: String, context: CardDavRequestContext): StatusResponse {
+    private fun resolveStatusResponse(location: String, context: RequestContext): StatusResponse {
         val okProps = mutableListOf<Node>()
         val notFoundProps = mutableListOf<Node>()
         val namespaces = mutableSetOf<Namespace>()
 
-        context.webDavRequest.props.forEach { prop ->
+        context.command?.props?.forEach { prop ->
             val resolverContext = ResolverContext(prop.name, prop.namespace, location)
-            val resolver = resolvers.firstOrNull { it.supports(resolverContext, context) }
+            val resolver = propResolver.firstOrNull { it.supports(resolverContext, context) }
 
             namespaces.add(prop.namespace)
 

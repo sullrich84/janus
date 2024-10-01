@@ -1,7 +1,7 @@
-package de.codecentric.apus.carddav.resolver.calendarserver
+package de.codecentric.apus.carddav.resolver.prop.calendarserver
 
-import de.codecentric.apus.carddav.request.CardDavRequestContext
-import de.codecentric.apus.carddav.resolver.ResolverContext
+import de.codecentric.apus.carddav.request.RequestContext
+import de.codecentric.apus.carddav.resolver.prop.ResolverContext
 import de.codecentric.apus.vcard.VCardService
 import org.redundent.kotlin.xml.Node
 import org.redundent.kotlin.xml.xml
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component
 @Component
 class GetCTagPropResolver(private val service: VCardService) : CalendarServerPropResolver("getctag") {
 
-    override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
+    override fun resolve(resolverContext: ResolverContext, requestContext: RequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
             text(service.getLatestCTag())
         }

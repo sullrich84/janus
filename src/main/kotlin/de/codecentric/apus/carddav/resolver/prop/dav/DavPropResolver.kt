@@ -1,9 +1,9 @@
-package de.codecentric.apus.carddav.resolver.dav
+package de.codecentric.apus.carddav.resolver.prop.dav
 
 import de.codecentric.apus.carddav.Namespace.DAV
-import de.codecentric.apus.carddav.request.CardDavRequestContext
-import de.codecentric.apus.carddav.resolver.PropResolver
-import de.codecentric.apus.carddav.resolver.ResolverContext
+import de.codecentric.apus.carddav.request.RequestContext
+import de.codecentric.apus.carddav.resolver.prop.PropResolver
+import de.codecentric.apus.carddav.resolver.prop.ResolverContext
 import org.redundent.kotlin.xml.Node
 
 /**
@@ -19,5 +19,5 @@ abstract class DavPropResolver(override val propName: String) : PropResolver(pro
     /**
      * Resolves the property for the given request context.
      */
-    abstract override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node
+    abstract override fun resolve(resolverContext: ResolverContext, requestContext: RequestContext): Node
 }
