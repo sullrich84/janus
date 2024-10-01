@@ -21,15 +21,30 @@ import org.springframework.stereotype.Component
 class GetETagPropResolver(private val service: VCardService) : DavPropResolver("getetag") {
 
     override fun supports(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Boolean {
-        return super.supports(resolverContext, cardDavRequestContext)
-                && resolverContext.href.endsWith(".vcf")
-                && service.has(getUidFromHref(resolverContext.href))
+        return super.supports(
+            resolverContext,
+            cardDavRequestContext
+        ) && (isVCardRequest(resolverContext) || isAddressbookRequest(resolverContext))
     }
 
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
-            val uid = resolverContext.href.substringAfterLast("/").substringBeforeLast(".vcf")
-            text(service.getETag(uid))
+            val eTag = if (isVCardRequest(resolverContext)) {
+                val uid = resolverContext.href.substringAfterLast("/").substringBeforeLast(".vcf")
+                service.getETag(uid)
+            } else {
+                service.getLatestSyncToken()
+            }
+
+            text(eTag)
         }
+    }
+
+    private fun isVCardRequest(resolverContext: ResolverContext): Boolean {
+        return resolverContext.href.endsWith(".vcf") && service.has(getUidFromHref(resolverContext.href))
+    }
+
+    private fun isAddressbookRequest(resolverContext: ResolverContext): Boolean {
+        return resolverContext.href.endsWith("/addressbook/")
     }
 }

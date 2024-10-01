@@ -3,7 +3,6 @@ package de.codecentric.janus.carddav
 import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.request.WebDavRequest
 import de.codecentric.janus.carddav.response.MultiStatusResponse
-import de.codecentric.janus.vcard.VCardService
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.MULTI_STATUS
@@ -18,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod.OPTIONS
 import org.springframework.web.server.ResponseStatusException
-import org.springframework.web.servlet.view.RedirectView
 
 
 /**
@@ -44,7 +42,7 @@ class CardDavController(val service: CardDavService) {
             webDavRequest = webDavRequest,
         )
 
-        val response = service.resolve(cardDavRequestContext = cardDavRequestContext)
+        val response = service.resolve(context = cardDavRequestContext)
 
         return ResponseEntity.status(MULTI_STATUS).contentType(TEXT_XML)
             // TODO: Check if we only need
@@ -81,16 +79,10 @@ class CardDavController(val service: CardDavService) {
         @RequestHeader(defaultValue = "0") depth: Int,
         @RequestHeader(defaultValue = "f") brief: String,
     ): ResponseEntity<MultiStatusResponse> {
-        val locations = when (depth) {
-            0 -> listOf("/$principal/")
-            1 -> listOf("/$principal/", "/$principal/addressbook/")
-            else -> throw ResponseStatusException(HttpStatus.BAD_REQUEST, "Depth $depth not supported")
-        }
-
         val cardDavRequestContext = CardDavRequestContext(
             depth = depth,
             brief = brief == "t",
-            locations = locations,
+            locations = listOf("/$principal/"),
             webDavRequest = webDavRequest,
             principal = principal,
         )
@@ -135,19 +127,10 @@ class CardDavController(val service: CardDavService) {
         @RequestHeader(defaultValue = "0") depth: Int,
         @RequestHeader(defaultValue = "f") brief: String,
     ): ResponseEntity<MultiStatusResponse> {
-        val locations = when (webDavRequest.method) {
-            WebDavRequest.RequestMethod.SYNC_COLLECTION,
-            WebDavRequest.RequestMethod.PROPFIND,
-            -> listOf("/$principal/addressbook/")
-
-            WebDavRequest.RequestMethod.ADDRESSBOOK_MULTIGET,
-            -> webDavRequest.hrefs
-        }
-
         val cardDavRequestContext = CardDavRequestContext(
             depth = depth,
             brief = brief == "t",
-            locations = locations,
+            locations = listOf("/$principal/addressbook/"),
             webDavRequest = webDavRequest,
             principal = principal,
         )

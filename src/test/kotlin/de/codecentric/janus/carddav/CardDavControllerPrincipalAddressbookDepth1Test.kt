@@ -1,5 +1,6 @@
 package de.codecentric.janus.carddav
 
+import de.codecentric.janus.vcard.VCardConfiguration
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Nested
@@ -7,14 +8,15 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus.MULTI_STATUS
 import org.springframework.http.MediaType.TEXT_XML_VALUE
 import org.springframework.test.web.reactive.server.WebTestClient
 
-@Disabled
 @AutoConfigureWebTestClient
+@Import(VCardConfiguration::class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CardDavControllerPrincipalAddressbookDepth1Test {
 
@@ -75,25 +77,25 @@ class CardDavControllerPrincipalAddressbookDepth1Test {
                 		<href>/codecentric/addressbook/</href>
                 		<propstat>
                 			<prop>
-                				<getetag>PATH-ETAG</getetag>
+                				<getetag>2024-09-30T12:00</getetag>
                 			</prop>
                 			<status>HTTP/1.1 200 OK</status>
                 		</propstat>
                 	</response>
                 	<response>
-                		<href>/codecentric/addressbook/RED.vcf</href>
+                		<href>/codecentric/addressbook/red.vcf</href>
                 		<propstat>
                 			<prop>
-                				<getetag>RED</getetag>
+                				<getetag>2024-09-30T12:00</getetag>
                 			</prop>
                 			<status>HTTP/1.1 200 OK</status>
                 		</propstat>
                 	</response>
                 	<response>
-                		<href>/codecentric/addressbook/GREEN.vcf</href>
+                		<href>/codecentric/addressbook/blue.vcf</href>
                 		<propstat>
                 			<prop>
-                				<getetag>GREEN</getetag>
+                				<getetag>2024-09-30T12:00</getetag>
                 			</prop>
                 			<status>HTTP/1.1 200 OK</status>
                 		</propstat>
