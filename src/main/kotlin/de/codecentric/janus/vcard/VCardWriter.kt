@@ -4,9 +4,6 @@ package de.codecentric.janus.vcard
 
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.format.DateTimeFormat
-import kotlinx.datetime.format.FormatStringsInDatetimeFormats
-import kotlinx.datetime.format.byUnicodePattern
 import org.springframework.stereotype.Component
 
 /**
@@ -38,7 +35,7 @@ class VCardWriter {
                 "TEL:$phone",
                 "TITLE:$title",
                 "URL:$url",
-                "END:VCARD"
+                "END:VCARD",
             )
         }
     }

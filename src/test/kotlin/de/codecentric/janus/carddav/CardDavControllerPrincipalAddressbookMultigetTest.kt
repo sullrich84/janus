@@ -47,7 +47,6 @@ class CardDavControllerPrincipalAddressbookMultigetTest {
             webClient
                 .method(HttpMethod.valueOf("REPORT"))
                 .uri("/codecentric/addressbook/")
-                .header("Depth", "1")
                 .bodyValue(
                     """
                     <B:addressbook-multiget xmlns:B="urn:ietf:params:xml:ns:carddav"> 
@@ -94,7 +93,9 @@ class CardDavControllerPrincipalAddressbookMultigetTest {
                 		<propstat>
                 			<prop>
                 				<getetag>2024-09-30T12:00</getetag>
-                				<CR:address-data>VCARD_DATA</CR:address-data>
+                				<CR:address-data>
+                                    VCARD_DATA
+                                </CR:address-data>
                 			</prop>
                 			<status>HTTP/1.1 200 OK</status>
                 		</propstat>
@@ -104,7 +105,9 @@ class CardDavControllerPrincipalAddressbookMultigetTest {
                 		<propstat>
                 			<prop>
                 				<getetag>2024-09-30T12:00</getetag>
-                				<CR:address-data>VCARD_DATA</CR:address-data>
+                				<CR:address-data>
+                                    VCARD_DATA
+                                </CR:address-data>
                 			</prop>
                 			<status>HTTP/1.1 200 OK</status>
                 		</propstat>

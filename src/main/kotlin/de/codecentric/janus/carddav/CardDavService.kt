@@ -37,24 +37,32 @@ class CardDavService(private val resolvers: MutableList<out PropResolver>, priva
     }
 
     fun fillUpLocations(context: CardDavRequestContext): CardDavRequestContext {
-        if (context.depth == 0) return context
-
         val additionalLocations = when (val root = context.locations.first()) {
             "/${context.principal}/" -> {
-                // Add principal specific collections
-                listOf(root, "/${context.principal}/addressbook/")
+                if (context.depth == 0) {
+                    // Only the principal
+                    listOf(root)
+                } else {
+                    // Add principal specific collections
+                    listOf(root, "/${context.principal}/addressbook/")
+                }
             }
 
             "/${context.principal}/addressbook/" -> {
                 // Add collection specific resources
-                when(context.webDavRequest.method) {
+                when (context.webDavRequest.method) {
                     PROPFIND -> {
-                        // All vcards in the addressbook
-                        val vcardLocations = service.getAll()
-                            .map { "/${context.principal}/addressbook/${it.uid}.vcf" }
-                            .toList()
+                        if (context.depth == 0) {
+                            // Only the principal
+                            listOf(root)
+                        } else {
+                            // All vcards in the addressbook
+                            val vcardLocations = service.getAll()
+                                .map { "/${context.principal}/addressbook/${it.uid}.vcf" }
+                                .toList()
 
-                        listOf(root).plus(vcardLocations)
+                            listOf(root).plus(vcardLocations)
+                        }
                     }
 
                     ADDRESSBOOK_MULTIGET -> {

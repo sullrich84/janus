@@ -49,7 +49,7 @@ class MultiStatusResponseWriter(source: MultiStatusResponse) {
                                 }
                             }
                             "status" {
-                                unsafeText(OK.status)
+                                text(OK.status)
                             }
                         }
                     }
