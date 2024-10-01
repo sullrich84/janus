@@ -17,5 +17,5 @@ data class CardDavRequestContext(
     val brief: Boolean,
     val locations: List<String>,
     val webDavRequest: WebDavRequest,
-    val principal: String? = null,
+    val principal: String? = "anonymous",
 )

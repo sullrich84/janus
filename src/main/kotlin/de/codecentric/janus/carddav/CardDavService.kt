@@ -88,7 +88,7 @@ class CardDavService(private val resolvers: MutableList<out PropResolver>, priva
         val lastSync = LocalDateTime.Formats.ISO.parse(lastSyncToken)
         val updatedSince = service.getUpdatedSince(lastSync)
 
-        val updatedResourceLocations = updatedSince.map { "/codecentric/addressbook/${it.uid}.vcf" }
+        val updatedResourceLocations = updatedSince.map { "/${context.principal}/addressbook/${it.uid}.vcf" }
             .map { resolveStatusResponse(it, context) }.toList()
 
         val syncToken = service.getLatestSyncToken()

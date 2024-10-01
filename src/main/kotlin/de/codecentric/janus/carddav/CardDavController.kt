@@ -46,7 +46,7 @@ class CardDavController(val service: CardDavService) {
 
         return ResponseEntity.status(MULTI_STATUS)
             .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
-            .header("DAV", "1, 2, 3, addressbook")
+            .header("DAV", "1, 2, 3, addressbook, extended-mkcol")
             .body(response)
     }
 

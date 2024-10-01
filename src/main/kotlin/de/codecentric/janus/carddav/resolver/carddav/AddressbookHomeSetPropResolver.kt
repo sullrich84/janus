@@ -22,7 +22,7 @@ class AddressbookHomeSetPropResolver : CardDavPropResolver("addressbook-home-set
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
             "href" {
-                text("/codecentric/")
+                text("/${cardDavRequestContext.principal}/")
             }
         }
     }
