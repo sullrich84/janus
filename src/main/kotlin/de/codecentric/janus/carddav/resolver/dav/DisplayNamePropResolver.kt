@@ -17,7 +17,7 @@ class DisplayNamePropResolver : DavPropResolver("displayname") {
 
     override fun resolve(resolverContext: ResolverContext, cardDavRequestContext: CardDavRequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
-            text("codecentric")
+            text("${cardDavRequestContext.principal}'s Addressbook")
         }
     }
 }
