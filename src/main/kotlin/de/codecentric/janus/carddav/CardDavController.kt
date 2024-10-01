@@ -3,6 +3,7 @@ package de.codecentric.janus.carddav
 import de.codecentric.janus.carddav.request.CardDavRequestContext
 import de.codecentric.janus.carddav.request.WebDavRequest
 import de.codecentric.janus.carddav.response.MultiStatusResponse
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.MULTI_STATUS
@@ -31,6 +32,7 @@ class CardDavController(val service: CardDavService) {
 
     @RequestMapping("/", produces = [TEXT_XML_VALUE])
     fun handlePropFindRequest(
+        request: HttpServletRequest,
         @RequestBody webDavRequest: WebDavRequest,
         @RequestHeader(defaultValue = "0") depth: Int,
         @RequestHeader(defaultValue = "f") brief: String,

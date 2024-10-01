@@ -2,6 +2,9 @@ package de.codecentric.janus.core
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.info.BuildProperties
+import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.time.OffsetDateTime
 
@@ -13,13 +16,13 @@ import java.time.OffsetDateTime
  * @since 1.0.0
  */
 @RestController
-//@RequestMapping("/")
+@RequestMapping("/")
 class IndexController {
 
     @Autowired
     lateinit var buildProperties: BuildProperties
 
-//    @RequestMapping
+    @GetMapping(produces = [APPLICATION_JSON_VALUE])
     fun index() = buildProperties.run {
         mapOf(
             "name" to name,
