@@ -15,22 +15,22 @@ class VCardRepository(private val configuration: VCardConfiguration) : InMemoryA
 
     private val json = Json { prettyPrint = true }
 
-    fun find(uid: String): VCard {
-        val file = File("${configuration.path}/$uid.json")
-        if (file.exists().not()) throw FileNotFoundException("VCard with uid $uid not found")
-
-        return json.decodeFromStream(file.inputStream())
+    fun find(filename: String): VCard {
+        return File("${configuration.path}/$filename.json").run {
+            if (!exists()) throw FileNotFoundException("$filename not found")
+            json.decodeFromStream(inputStream())
+        }
     }
 
     fun findAllUid(): Set<String> {
-        val directory = File(configuration.path)
-        if (directory.exists().not()) return emptySet()
+        return File(configuration.path).run {
+            if (!exists()) return emptySet()
 
-        val vCards = directory.listFiles() ?: emptyArray()
-        return vCards
-            .filter { it.extension == "json" }
-            .map { it.nameWithoutExtension }
-            .toSet()
+            (listFiles() ?: emptyArray())
+                .filter { it.extension == "json" }
+                .map { it.nameWithoutExtension }
+                .toSet()
+        }
     }
 
     fun findAll(): Set<VCard> {
@@ -40,14 +40,13 @@ class VCardRepository(private val configuration: VCardConfiguration) : InMemoryA
     }
 
     fun save(vCard: VCard) {
-        val file = File("${configuration.path}/${vCard.uid}.json")
-        file.parentFile.mkdirs()
-
-        json.encodeToStream(vCard, file.outputStream())
+        File("${configuration.path}/${vCard.persistenceName}.json").run {
+            parentFile.mkdirs()
+            json.encodeToStream(vCard, outputStream())
+        }
     }
 
-    fun exists(uid: String): Boolean {
-        val file = File("${configuration.path}/$uid.json")
-        return file.exists()
+    fun exists(filename: String): Boolean {
+        return File("${configuration.path}/$filename.json").exists()
     }
 }

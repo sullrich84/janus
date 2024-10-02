@@ -1,13 +1,23 @@
 {
-  "uid": "red",
-  "givenName": "Red",
-  "familyName": "Red",
-  "birthDate": "2024-08-30",
-  "email": "red@codecentric.de",
-  "language": "DE",
-  "organization": "codecentric",
-  "role": "Unit Tester",
-  "phone": "+49 123 456789",
-  "revision": "2024-09-30T12:00",
-  "url": "https://codecentric.de"
+  "meta": {
+    "rev": "2024-09-30T12:00",
+    "uid": "red"
+  },
+  "bio": {
+    "givenName": "Red",
+    "familyName": "Red",
+    "birthday": "2024-08-30"
+  },
+  "contact": {
+    "email": "red@codecentric.de",
+    "cellPhone": "+49 123 456789"
+  },
+  "additionalInfo": {
+    "githubUrl": "https://github.com/red"
+  },
+  "organization": {
+    "name": "codecentric",
+    "branch": "Software Development",
+    "division": "Dev Team Red"
+  }
 }

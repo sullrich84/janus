@@ -1,7 +1,10 @@
 package de.codecentric.apus.vcard
 
 import com.ninjasquad.springmockk.MockkBean
+import de.codecentric.apus.vcard.VCard.Companion.vcard
 import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
+import io.kotest.matchers.equality.shouldBeEqualToComparingFields
+import io.kotest.matchers.equality.shouldBeEqualUsingFields
 import io.kotest.matchers.equals.shouldBeEqual
 import io.kotest.matchers.shouldBe
 import io.mockk.every
@@ -30,21 +33,34 @@ class VCardRepositoryTest {
         val path = this::class.java.classLoader.getResource("vcard")?.path
         every { configuration.path } returns path.toString()
 
-        subject.find("red") shouldBeEqual VCard(
-            uid = "red",
-            givenName = "Red",
-            familyName = "Red",
-            birthDate = LocalDate(2024, 8, 30),
-            email = "red@codecentric.de",
-            language = "DE",
-            organization = "codecentric",
-            role = "Unit Tester",
-            phone = "+49 123 456789",
-            revision = LocalDateTime(2024, 9, 30, 12, 0, 0, 0),
-            url = "https://codecentric.de",
-        )
-    }
+        subject.find("red") shouldBeEqualUsingFields vcard {
+            meta {
+                uid = "red"
+                rev = LocalDateTime(2024, 9, 30, 12, 0)
+            }
 
+            bio {
+                givenName = "Red"
+                familyName = "Red"
+                birthday = LocalDate(2024, 8, 30)
+            }
+
+            contact {
+                email = "red@codecentric.de"
+                cellPhone = "+49 123 456789"
+            }
+
+            additionalInfo {
+                githubUrl = "https://github.com/red"
+            }
+
+            organization {
+                name = "codecentric"
+                branch = "Software Development"
+                division = "Dev Team Red"
+            }
+        }
+    }
 
     @Test
     @DisplayName("should read blue vcard")
@@ -52,19 +68,33 @@ class VCardRepositoryTest {
         val path = this::class.java.classLoader.getResource("vcard")?.path
         every { configuration.path } returns path.toString()
 
-        subject.find("blue") shouldBeEqual VCard(
-            uid = "blue",
-            givenName = "Blue",
-            familyName = "Blue",
-            birthDate = LocalDate(2024, 8, 30),
-            email = "blue@codecentric.de",
-            language = "DE",
-            organization = "codecentric",
-            role = "Unit Tester",
-            phone = "+49 123 456789",
-            revision = LocalDateTime(2024, 9, 30, 12, 0, 0, 0),
-            url = "https://codecentric.de",
-        )
+        subject.find("blue") shouldBeEqualUsingFields vcard {
+            meta {
+                uid = "blue"
+                rev = LocalDateTime(2024, 9, 30, 12, 0)
+            }
+
+            bio {
+                givenName = "Blue"
+                familyName = "Blue"
+                birthday = LocalDate(2024, 8, 30)
+            }
+
+            contact {
+                email = "blue@codecentric.de"
+                cellPhone = "+49 123 456789"
+            }
+
+            additionalInfo {
+                githubUrl = "https://github.com/blue"
+            }
+
+            organization {
+                name = "codecentric"
+                branch = "Software Development"
+                division = "Dev Team Blue"
+            }
+        }
     }
 
     @Test
@@ -88,19 +118,33 @@ class VCardRepositoryTest {
     @Test
     @DisplayName("should write vcard to file")
     fun shouldWriteVCardToFile() {
-        val vCard = VCard(
-            uid = "apus",
-            givenName = "Apus",
-            familyName = "Apus",
-            birthDate = LocalDate(2024, 8, 30),
-            email = "apus@codecentric.de",
-            language = "DE",
-            organization = "codecentric",
-            role = "Unit Tester",
-            phone = "+49 123 456789",
-            revision = LocalDateTime(2024, 9, 30, 12, 0, 0, 0),
-            url = "https://codecentric.de",
-        )
+        val vCard = vcard {
+            meta {
+                uid = "apus"
+                rev = LocalDateTime(2024, 10, 2, 15, 47, 38, 47795)
+            }
+
+            bio {
+                givenName = "Apus"
+                familyName = "Apus"
+                birthday = LocalDate(2024, 8, 30)
+            }
+
+            contact {
+                email = "apus@codecentric.de"
+                cellPhone = "+49 123 456789"
+            }
+
+            organization {
+                name = "codecentric";
+                branch = "Software Development"
+                division = "Dev Team"
+            }
+
+            additionalInfo {
+                githubUrl = "https://github.com/codecentric/apus"
+            }
+        }
 
         with(createTempDirectory("apus").toFile()) {
             every { configuration.path } returns path
@@ -108,19 +152,29 @@ class VCardRepositoryTest {
 
             subject.save(vCard)
 
-            File("$path/apus.json").readText(UTF_8) shouldBe """
+            File("$path/${vCard.persistenceName}.json").readText(UTF_8) shouldBe """
                 {
-                    "uid": "apus",
-                    "givenName": "Apus",
-                    "familyName": "Apus",
-                    "birthDate": "2024-08-30",
-                    "email": "apus@codecentric.de",
-                    "language": "DE",
-                    "organization": "codecentric",
-                    "role": "Unit Tester",
-                    "phone": "+49 123 456789",
-                    "revision": "2024-09-30T12:00",
-                    "url": "https://codecentric.de"
+                    "meta": {
+                        "rev": "2024-10-02T15:47:38.000047795",
+                        "uid": "apus"
+                    },
+                    "bio": {
+                        "givenName": "Apus",
+                        "familyName": "Apus",
+                        "birthday": "2024-08-30"
+                    },
+                    "contact": {
+                        "email": "apus@codecentric.de",
+                        "cellPhone": "+49 123 456789"
+                    },
+                    "additionalInfo": {
+                        "githubUrl": "https://github.com/codecentric/apus"
+                    },
+                    "organization": {
+                        "name": "codecentric",
+                        "branch": "Software Development",
+                        "division": "Dev Team"
+                    }
                 }
             """.trimIndent()
         }

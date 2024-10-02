@@ -1,0 +1,18 @@
+BEGIN:VCARD
+VERSION:4.0
+TITLE:Consultant Developer
+FN:Dr. John 'Johnny' Doe
+NICKNAME:Johnny
+N:Doe;John;;Dr.;
+BDAY:1980-01-01
+ORG:codecentric;Software Development;Consulting
+ANNIVERSARY:2000-01-01
+ADR:;;Hochstraße 11;Solingen;Nordrhein-Westfalen;42697;Deutschland
+EMAIL:john.doe@codecentric.de
+TEL;TYPE=WORK,CELL:+49 212 1234567
+URL;type=GitHub:https://github.com/codecentric
+URL;type=GitLab:https://gitlab.com/codecentric
+URL;type=Atlas:https://atlas.codecentric.de/johndoe
+REV:2024-09-30T12:00:00
+UID:john-doe-12345
+END:VCARD

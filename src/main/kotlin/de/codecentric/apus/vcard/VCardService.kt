@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service
 class VCardService(private val repository: VCardRepository) {
 
     fun getLatestSyncToken(): String {
-        return getAll().maxOfOrNull { it.revision }?.toString() ?: createNewToken()
+        return getAll().maxOfOrNull { it.updatedAt }?.toString() ?: createNewToken()
     }
 
     fun getLatestCTag(): String {
-        return getAll().maxOfOrNull { it.revision }?.toString() ?: createNewToken()
+        return getAll().maxOfOrNull { it.updatedAt }?.toString() ?: createNewToken()
     }
 
     fun getAll(): Set<VCard> {
@@ -19,7 +19,7 @@ class VCardService(private val repository: VCardRepository) {
     }
 
     fun getETag(uid: String): String {
-        return repository.find(uid).revision.toString()
+        return repository.find(uid).updatedAt.toString()
     }
 
     fun get(uid: String): VCard {
@@ -31,7 +31,7 @@ class VCardService(private val repository: VCardRepository) {
     }
 
     fun getUpdatedSince(lastSync: LocalDateTime): Set<VCard> {
-        return repository.findAll().filter { it.revision > lastSync }.toSet()
+        return repository.findAll().filter { it.updatedAt > lastSync }.toSet()
     }
 
     private fun createNewToken(): String {
