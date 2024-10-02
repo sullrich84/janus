@@ -18,8 +18,8 @@ import de.codecentric.apus.carddav.Namespace
 data class WebDavRequest(
     val method: RequestMethod,
     val namespace: Namespace,
-    val props: List<Prop> = emptyList(),
-    val hrefs: List<String> = emptyList(),
+    val props: Set<Prop> = emptySet(),
+    val hrefs: Set<String> = emptySet(),
     val syncToken: String? = null,
     val syncLevel: Int? = null,
 ) {

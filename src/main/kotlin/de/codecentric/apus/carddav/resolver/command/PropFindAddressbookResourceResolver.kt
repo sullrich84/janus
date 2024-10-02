@@ -12,6 +12,6 @@ class PropFindAddressbookResourceResolver : CommandResolver(PROPFIND) {
     }
 
     override fun resolveLocations(context: RequestContext): Set<String> {
-              return setOf(context.requestUri.path.plus("/"))
+        return setOf(context.requestUri.path.plus("/"))
     }
 }

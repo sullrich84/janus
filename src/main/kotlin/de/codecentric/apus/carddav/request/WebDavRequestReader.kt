@@ -26,14 +26,16 @@ class WebDavRequestReader(private val source: InputStream) {
      */
     fun read(): WebDavRequest {
         val document = builder.parse(InputSource(source))
-        val rootElement = document.documentElement
-        val method = RequestMethod.fromString(rootElement.localName)
-        val namespace = Namespace.fromString(rootElement.namespaceURI)
+        val root = document.documentElement
+        val method = RequestMethod.fromString(root.localName)
+        val namespace = Namespace.fromString(root.namespaceURI)
 
-        val props = getProps(rootElement)
-        val hrefs = getHrefs(rootElement)
-        val syncToken = rootElement.getElementsByTagNameNS(DAV.uri, "sync-token").item(0)?.textContent
-        val syncLevel = rootElement.getElementsByTagNameNS(DAV.uri, "sync-level").item(0)?.textContent?.toInt()
+        val props = getProps(root)
+        val hrefs = getHrefs(root)
+
+        val getText = { name: String -> root.getElementsByTagNameNS(DAV.uri, name).item(0)?.textContent }
+        val syncToken = getText("sync-token")
+        val syncLevel = getText("sync-level")?.toInt()
 
         return WebDavRequest(
             method = method,
@@ -48,38 +50,26 @@ class WebDavRequestReader(private val source: InputStream) {
     /**
      * Extracts all <prop> from the given root element.
      */
-    private fun getProps(rootElement: Element): List<WebDavRequest.Prop> {
-        val props = mutableListOf<WebDavRequest.Prop>()
-        val propElements = rootElement .getElementsByTagNameNS(DAV.uri, "prop")
-            .item(0).childNodes
-
-        for (i in 0 until propElements.length) {
-            val node = propElements.item(i)
-            if (node !is Element) continue
-
-            val namespace = Namespace.fromString(node.namespaceURI)
-            val prop = WebDavRequest.Prop(node.localName, namespace)
-            props.add(prop)
+    private fun getProps(rootElement: Element): Set<WebDavRequest.Prop> {
+        return rootElement.getElementsByTagNameNS(DAV.uri, "prop").item(0).childNodes.run {
+            (0 until length)
+                .map { item(it) }
+                .filterIsInstance<Element>()
+                .map { WebDavRequest.Prop(it.localName, Namespace.fromString(it.namespaceURI)) }
+                .toSet()
         }
-
-        return props
     }
 
     /**
      * Extracts all <href> from the given root element.
      */
-    private fun getHrefs(rootElement: Element): List<String> {
-        val hrefs = mutableListOf<String>()
-        val hrefElements = rootElement.getElementsByTagNameNS(DAV.uri, "href")
-
-        for (i in 0 until hrefElements.length) {
-            val node = hrefElements.item(i)
-            if (node !is Element) continue
-
-            hrefs.add(node.textContent)
+    private fun getHrefs(rootElement: Element): Set<String> {
+        return rootElement.getElementsByTagNameNS(DAV.uri, "href").run {
+            (0 until length)
+                .map { item(it) }
+                .filterIsInstance<Element>()
+                .map { it.textContent }
+                .toSet()
         }
-
-        return hrefs
     }
-
 }

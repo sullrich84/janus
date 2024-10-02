@@ -23,10 +23,12 @@ class CardDavService(private val propResolver: List<PropResolver>, private val c
 
     fun resolve(context: RequestContext): MultiStatusResponse {
         val resolver = cmdResolver.first { resolver -> resolver.supports(context) }
-        val locations = resolver.resolveLocations(context)
-        val responses = locations.map { resolveStatusResponse(it, context) }
 
-        val response = MultiStatusResponse(responses = responses.toList())
+        val responses = resolver.resolveLocations(context)
+            .map { resolveStatusResponse(it, context) }
+            .toList()
+
+        val response = MultiStatusResponse(responses = responses)
         return resolver.updateResponse(context, response)
     }
 

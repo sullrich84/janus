@@ -22,9 +22,7 @@ class AddressDataPropResolver(private val service: VCardService, private val wri
     override fun resolve(resolverContext: ResolverContext, requestContext: RequestContext): Node {
         return xml(namespace.appendPrefix(propName)) {
             val vcard = service.get(getUidFromHref(resolverContext.href))
-            writer.write(vcard).forEach {
-                text(it + "\n")
-            }
+            writer.write(vcard).forEach { text(it + "\n") }
         }
     }
 }

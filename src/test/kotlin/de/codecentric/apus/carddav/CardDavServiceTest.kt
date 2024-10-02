@@ -33,7 +33,7 @@ class CardDavServiceTest {
         @Test
         @DisplayName("should find current-user-principal")
         fun shouldFindCurrentUserPrincipal() {
-            val props = listOf(
+            val props = setOf(
                 WebDavRequest.Prop("current-user-principal", DAV),
                 WebDavRequest.Prop("some-unknown-prop", DAV),
             )
