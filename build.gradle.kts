@@ -58,10 +58,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinxSerializationVersion")
 
     // Spring Modulith
-//    implementation("org.springframework.modulith:spring-modulith-actuator")
-//    implementation("org.springframework.modulith:spring-modulith-starter-core")
-//    implementation("org.springframework.modulith:spring-modulith-observability")
-//    implementation("org.springframework.modulith:spring-modulith-starter-insight")
+    implementation("org.springframework.modulith:spring-modulith-actuator")
+    implementation("org.springframework.modulith:spring-modulith-starter-core")
+    implementation("org.springframework.modulith:spring-modulith-observability")
+    implementation("org.springframework.modulith:spring-modulith-starter-insight")
 
     implementation("io.micrometer:micrometer-tracing-bridge-brave")
     implementation("io.zipkin.reporter2:zipkin-reporter-brave")
