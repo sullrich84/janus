@@ -15,9 +15,9 @@ class VCardRepository(private val configuration: VCardConfiguration) : InMemoryA
 
     private val json = Json { prettyPrint = true }
 
-    fun find(filename: String): VCard {
-        return File("${configuration.path}/$filename.json").run {
-            if (!exists()) throw FileNotFoundException("$filename not found")
+    fun find(uid: String): VCard {
+        return File("${configuration.path}/$uid.json").run {
+            if (!exists()) throw FileNotFoundException("$uid not found")
             json.decodeFromStream(inputStream())
         }
     }
@@ -26,7 +26,7 @@ class VCardRepository(private val configuration: VCardConfiguration) : InMemoryA
         return File(configuration.path).run {
             if (!exists()) return emptySet()
 
-            (listFiles() ?: emptyArray())
+            listFiles().orEmpty()
                 .filter { it.extension == "json" }
                 .map { it.nameWithoutExtension }
                 .toSet()
@@ -40,13 +40,13 @@ class VCardRepository(private val configuration: VCardConfiguration) : InMemoryA
     }
 
     fun save(vCard: VCard) {
-        File("${configuration.path}/${vCard.persistenceName}.json").run {
+        File("${configuration.path}/${vCard.uid}.json").run {
             parentFile.mkdirs()
             json.encodeToStream(vCard, outputStream())
         }
     }
 
-    fun exists(filename: String): Boolean {
-        return File("${configuration.path}/$filename.json").exists()
+    fun exists(uid: String): Boolean {
+        return File("${configuration.path}/$uid.json").exists()
     }
 }

@@ -4,6 +4,4 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 
 
 @ConfigurationProperties(prefix = "vcard")
-data class VCardConfiguration(
-    val path: String = "/var/apus/vcards",
-)
+data class VCardConfiguration(val path: String = "/var/apus/vcards")

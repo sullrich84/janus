@@ -62,6 +62,7 @@ class VCardRepositoryTest {
         }
     }
 
+
     @Test
     @DisplayName("should read blue vcard")
     fun shouldReadBlueVCard() {
@@ -152,7 +153,7 @@ class VCardRepositoryTest {
 
             subject.save(vCard)
 
-            File("$path/${vCard.persistenceName}.json").readText(UTF_8) shouldBe """
+            File("$path/${vCard.uid}.json").readText(UTF_8) shouldBe """
                 {
                     "meta": {
                         "rev": "2024-10-02T15:47:38.000047795",

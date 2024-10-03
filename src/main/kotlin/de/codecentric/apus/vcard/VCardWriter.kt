@@ -4,6 +4,7 @@ package de.codecentric.apus.vcard
 
 import org.springframework.stereotype.Component
 
+
 /**
  * This class is responsible for converting {@link VCard} objects to the VCARD format.
  *
