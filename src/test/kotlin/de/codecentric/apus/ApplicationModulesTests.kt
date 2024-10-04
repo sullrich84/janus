@@ -13,7 +13,7 @@ class ApplicationModulesTests {
     @Test
     fun contextLoads() {
         ApplicationModules.of(ApusApplication::class.java).verify().let { modules ->
-            modules.map { module-> module.name }.forEach { name -> println("Found module $name") }
+            modules.map { module -> module.name }.forEach { name -> println("Found module $name") }
             Documenter(modules).writeModulesAsPlantUml().writeDocumentation()
         }
     }
