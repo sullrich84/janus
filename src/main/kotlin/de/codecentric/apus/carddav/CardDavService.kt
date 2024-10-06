@@ -14,15 +14,22 @@ import org.springframework.stereotype.Component
  * Service class for resolving CardDAV properties.
  *
  * @param propResolver The list of available property resolvers in ApplicationContext
-
+ * @param cmdResolver The list of available command resolvers in ApplicationContext
+ *
  * @author Sebastian Ullrich
  * @since 1.0.0
  */
 @Component
 class CardDavService(private val propResolver: List<PropResolver>, private val cmdResolver: List<CommandResolver>) {
 
+    /**
+     * Identifies and invokes the matching [CommandResolver] for the given [RequestContext].
+     *
+     * @param context The request context to be resolved
+     */
     fun resolve(context: RequestContext): MultiStatusResponse {
-        val resolver = cmdResolver.first { resolver -> resolver.supports(context) }
+        val resolver = cmdResolver.firstOrNull { resolver -> resolver.supports(context) }
+        checkNotNull(resolver) { "No matching command resolver found for context: $context" }
 
         val responses = resolver.resolveLocations(context)
             .map { resolveStatusResponse(it, context) }
@@ -32,6 +39,12 @@ class CardDavService(private val propResolver: List<PropResolver>, private val c
         return resolver.updateResponse(context, response)
     }
 
+    /**
+     * Resolves the properties for the given location and request context.
+     *
+     * @param location The location to resolve the properties for
+     * @param context The request context to resolve the properties for
+     */
     private fun resolveStatusResponse(location: String, context: RequestContext): StatusResponse {
         val okProps = mutableListOf<Node>()
         val notFoundProps = mutableListOf<Node>()

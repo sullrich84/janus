@@ -7,7 +7,7 @@ import de.codecentric.apus.carddav.resolver.prop.ResolverContext
 import org.redundent.kotlin.xml.Node
 
 /**
- * Resolves a property for a given request context.
+ * Resolves a property for a given WebDAV request context.
  *
  * @param propName the name of the dav property
  *
