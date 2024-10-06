@@ -2,12 +2,10 @@ package de.codecentric.apus.carddav
 
 import de.codecentric.apus.carddav.request.RequestContext
 import de.codecentric.apus.carddav.request.WebDavRequest
-import de.codecentric.apus.carddav.response.MultiStatusResponse
-import org.springframework.http.HttpMethod
+import de.codecentric.apus.carddav.response.MultiStatusResponseEntity
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.MULTI_STATUS
 import org.springframework.http.HttpStatus.OK
-import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PathVariable
@@ -26,86 +24,62 @@ import org.springframework.web.bind.annotation.RequestMethod.OPTIONS
 @Controller
 class CardDavController(val service: CardDavService) {
 
-    @RequestMapping("/", produces = ["text/xml; charset=utf-8"])
+    @RequestMapping("/")
     fun handlePropFindRequest(
         @RequestBody webDavRequest: WebDavRequest,
         requestContext: RequestContext,
-    ): ResponseEntity<MultiStatusResponse> {
-
-        requestContext.command = webDavRequest
-        val response = service.resolve(requestContext)
-
-        return ResponseEntity.status(MULTI_STATUS)
-            .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
-            .header("DAV", "1, 2, 3, addressbook")
-            .body(response)
+    ): MultiStatusResponseEntity {
+        return requestContext.let { ctx ->
+            ctx.command = webDavRequest
+            MultiStatusResponseEntity(service.resolve(requestContext), MULTI_STATUS)
+        }
     }
 
-    @RequestMapping("/**", method = [OPTIONS], produces = ["text/xml; charset=utf-8"])
-    fun handlePrincipalOptionsRequest(): ResponseEntity<Void> {
-        return ResponseEntity.status(OK)
-            .allow(
-                HttpMethod.GET,
-                HttpMethod.OPTIONS,
-                HttpMethod.valueOf("PROPFIND"),
-                HttpMethod.valueOf("REPORT"),
-            )
-            .header("DAV", "1, 2, 3, addressbook")
-            .build()
+    @RequestMapping("/**", method = [OPTIONS])
+    fun handlePrincipalOptionsRequest(): MultiStatusResponseEntity {
+        return MultiStatusResponseEntity(OK)
     }
 
-    @RequestMapping("/{principal}/", produces = ["text/xml; charset=utf-8"])
+    @RequestMapping("/{principal}/")
     fun handlePrincipalPropFindRequest(
         @PathVariable principal: String,
         @RequestBody webDavRequest: WebDavRequest,
         requestContext: RequestContext,
-    ): ResponseEntity<MultiStatusResponse> {
-
-        requestContext.command = webDavRequest
-        requestContext.principal = principal
-        val response = service.resolve(requestContext)
-
-        return ResponseEntity.status(MULTI_STATUS)
-            .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
-            .header("DAV", "1, 2, 3, addressbook")
-            .body(response)
+    ): MultiStatusResponseEntity {
+        return requestContext.let { ctx ->
+            ctx.command = webDavRequest
+            ctx.principal = principal
+            MultiStatusResponseEntity(service.resolve(requestContext), MULTI_STATUS)
+        }
     }
 
-    @RequestMapping("/{principal}/addressbook", produces = ["text/xml; charset=utf-8"])
+    @RequestMapping("/{principal}/addressbook")
     fun handlePrincipalAddressbookPropFindRequest(
         @PathVariable principal: String,
         @RequestBody webDavRequest: WebDavRequest,
         requestContext: RequestContext,
-    ): ResponseEntity<MultiStatusResponse> {
-
-        requestContext.command = webDavRequest
-        requestContext.principal = principal
-        val response = service.resolve(requestContext)
-
-        return ResponseEntity.status(MULTI_STATUS)
-            .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
-            .header("DAV", "1, 2, 3, addressbook")
-            .body(response)
+    ): MultiStatusResponseEntity {
+        return requestContext.let { ctx ->
+            ctx.command = webDavRequest
+            ctx.principal = principal
+            MultiStatusResponseEntity(service.resolve(requestContext), MULTI_STATUS)
+        }
     }
 
-    @RequestMapping("/{principal}/addressbook/", produces = ["text/xml; charset=utf-8"])
+    @RequestMapping("/{principal}/addressbook/")
     fun handlePrincipalAddressbookPathPropFindRequest(
         @PathVariable principal: String,
         @RequestBody webDavRequest: WebDavRequest,
         requestContext: RequestContext,
-    ): ResponseEntity<MultiStatusResponse> {
-
-        requestContext.command = webDavRequest
-        requestContext.principal = principal
-        val response = service.resolve(requestContext)
-
-        return ResponseEntity.status(MULTI_STATUS)
-            .contentType(MediaType.valueOf("text/xml; charset=utf-8"))
-            .header("DAV", "1, 2, 3, addressbook")
-            .body(response)
+    ): MultiStatusResponseEntity {
+        return requestContext.let { ctx ->
+            ctx.command = webDavRequest
+            ctx.principal = principal
+            MultiStatusResponseEntity(service.resolve(requestContext), MULTI_STATUS)
+        }
     }
 
-    @RequestMapping("/.well-known/carddav", produces = ["text/xml; charset=utf-8"])
+    @RequestMapping("/.well-known/carddav")
     fun handleWellKnownCardDavRequest(): ResponseEntity<Void> {
         return ResponseEntity.status(HttpStatus.MOVED_PERMANENTLY)
             .header("Location", "/")
